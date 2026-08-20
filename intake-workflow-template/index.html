@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The client-intake Make blueprint: download, import, and what to change before it runs | Workflow Test Lab</title><meta name="description" content="The client-intake Make blueprint: download, import, and what to change before it runs (tested 2026-08-20)">
+<meta name='impact-site-verification' value='68243723-46ca-4e30-aaf0-d4f93802c4c2'>
+<style>
+:root{--bg:#fff;--fg:#1c1c1c;--muted:#5a5a5a;--line:#8a8a8a;--accent:#1f5fbf;--card:#f4f4f4}
+@media (prefers-color-scheme:dark){:root{--bg:#121212;--fg:#ececec;--muted:#b0b0b0;--line:#7a7a7a;--accent:#7fb0ff;--card:#1c1c1c}}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--fg);line-height:1.6}
+header{border-bottom:1px solid var(--line)} .wrap{max-width:820px;margin:0 auto;padding:0 20px}
+header .wrap{display:flex;flex-wrap:wrap;gap:10px 24px;align-items:baseline;padding:14px 20px}
+header a.brand{font-weight:700;text-decoration:none;color:var(--fg)} nav a{margin-right:14px;color:var(--accent);text-decoration:none;font-size:.95rem}
+main.wrap{padding:28px 20px 56px} h1{font-size:1.7rem;line-height:1.25} h2{font-size:1.2rem;margin-top:28px}
+blockquote{border-left:4px solid var(--accent);margin:16px 0;padding:8px 14px;background:var(--card);font-size:.93rem}
+table{border-collapse:collapse;width:100%;font-size:.93rem;display:block;overflow-x:auto} th,td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--line);vertical-align:top}
+code{background:var(--card);padding:1px 5px;border-radius:4px;font-size:.92em} img{max-width:100%;height:auto;border:1px solid var(--line);border-radius:6px}
+footer{border-top:1px solid var(--line);color:var(--muted);font-size:.85rem} footer .wrap{padding:18px 20px 40px}
+.meta{color:var(--muted);font-size:.9rem} .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.card{border:1px solid var(--line);border-radius:10px;padding:14px;background:var(--card)} .card a{color:var(--accent);text-decoration:none;font-weight:600}
+.preview-banner{background:#ffe9b3;color:#4a3300;padding:8px 14px;font-weight:600;text-align:center}
+</style></head><body>
+<header><div class="wrap"><a class="brand" href="/">Workflow Test Lab</a><nav><a href="/">Home</a><a href="/intake-workflow-template/">Template</a><a href="/tested-client-intake-workflow/">Tested workflow</a><a href="/what-breaks-client-intake/">What breaks</a><a href="/who-should-not-use-this-stack/">Who should skip it</a><a href="/tools/intake-cost-calculator.html">Cost calculator</a></nav></div></header>
+<main class="wrap"><blockquote>
+<p><strong>Advertising notice:</strong> this page currently contains no advertising (affiliate) links. If we
+add any, each will be marked next to the link and this notice will be updated. Where we
+rely on vendor documentation or have not tested something, the text says so.</p>
+</blockquote>
+<h1>The client-intake Make blueprint: download, import, and what to change before it runs</h1>
+<p><strong>Tested 2026-08-16 (v1, two rounds) and 2026-08-20 (v2 with error handlers, each case once).
+Plans used, checked on the dates shown: Tally Free and HubSpot Free CRM (accounts created
+2026-08-05), Brevo Free (2026-08-06), Make Free (license read via API 2026-08-20).</strong> This is the
+exact scenario from our <a href="/tested-client-intake-workflow/">tested workflow guide</a>, exported from
+Make as a blueprint file. It is not a diagram; it is the thing that ran.</p>
+<h2>What you get</h2>
+<ul>
+<li><code>client-intake-v2.blueprint.json</code>: Tally webhook trigger, HubSpot contact search with an
+  exact email filter, a router with a new-lead path (create contact, create deal, link deal to
+  contact through one HubSpot API call, send acknowledgement through Brevo) and an existing-
+  contact path (update contact), plus error-handler routes that email an alert and keep the
+  scenario running when the association call or the contact creation fails.</li>
+<li><code>client-intake-v1.blueprint.json</code>: the same workflow without error handlers and with the
+  older free-text search. Kept for reference. We do not recommend running it: in our tests,
+  both unhandled errors we provoked deactivated it (see <a href="/what-breaks-client-intake/">what breaks</a>).</li>
+</ul>
+<p>The published files are sanitized copies of our exports. Make blueprints contain no API keys;
+they reference connections by numeric ID plus a readable label, and our originals carried our
+lab account's name and address in those labels and in the email modules. In the download
+copies those are replaced with placeholders (<code>Your HubSpot CRM connection</code>, <code>you@example.com</code>,
+<code>sender@example.com</code>, <code>Your Company</code>). Your Make account will ask you to pick your own
+connections on import anyway.</p>
+<p><strong>Download:</strong> <code>client-intake-v2.blueprint.json</code> and <code>client-intake-v1.blueprint.json</code>
+(final links land here when the site is live).</p>
+<h2>Import in Make</h2>
+<ol>
+<li>Create a new scenario and open the three-dot menu in the scenario editor; choose Import
+   blueprint and select the JSON file (Make Help Center, checked on 2026-08-20). We exported
+   on Make Free on 2026-08-16 without restriction. We have not tested importing on Free; try
+   it before you plan around it.</li>
+<li>Make's documentation says you must create your own connections after importing (checked
+   on 2026-08-20). Create or pick your Tally, HubSpot CRM, and Brevo connections when the
+   modules ask. We expect the Tally trigger to ask for a webhook as well; choose your own form
+   there. Not tested by us.</li>
+<li>Save the scenario explicitly before doing anything else. Run once does not save; we lost two
+   modules that way on 2026-08-15.</li>
+</ol>
+<h2>Five values you must change</h2>
+<p>Each of these carries a placeholder or a value from our form. Left as is, the scenario will
+either fail to map your data or send mail to a placeholder address.</p>
+<ol>
+<li><strong>Tally field mappings (modules 3, 5, 6, 7, 13, 20, 22).</strong> On our form, Tally identified
+   the email field as <code>question_7vj5DL</code>, the name as <code>question_6v45ke</code>, and the company as
+   <code>question_brgGke</code>; your form's IDs will differ. After connecting your form, submit one test
+   response, then open each listed module and re-pick whichever of those fields it maps: email
+   in 3, 5, 13, 20, 22; name in 5, 6, 7, 13, 20, 22; company in 5 and 6.</li>
+<li><strong>Alert recipient (modules 20 and 22).</strong> The error-handler emails go to <code>you@example.com</code>.
+   Put your own address there.</li>
+<li><strong>Sender and reply-to (modules 13, 20, 22).</strong> Both the sender and the reply-to fields hold
+   <code>Your Company &lt;sender@example.com&gt;</code>. Replace them with a sender you have verified in Brevo.
+   In our tests Brevo rewrote the visible sender of our unauthenticated Gmail address to its
+   shared brevosend.com domain and the emails still reached a Gmail inbox; other providers and
+   authenticated domains untested.</li>
+<li><strong>Acknowledgement text (module 13).</strong> It says "Your Company". Make it yours.</li>
+<li><strong>Deal name, stage, pipeline (module 7).</strong> Stage <code>appointmentscheduled</code> and pipeline
+   <code>default</code> are internal names of HubSpot's starter pipeline; they worked in our portal,
+   created on 2026-08-05. If you renamed or rebuilt your pipeline, pick your own stage.</li>
+</ol>
+<h2>Two things to know</h2>
+<ul>
+<li><strong>HubSpot region.</strong> Our portal runs on HubSpot's EU data center. The association call uses
+  a relative path through Make's HubSpot connection, so we expect it to follow your connection's
+  region without edits; we have not tested an import into another region.</li>
+<li><strong>Operation budget.</strong> A new lead costs 6 Make credits, a duplicate 3, a handled failure up to
+  7 (measured). Make Free gives 1,000 credits a month (checked on 2026-08-20). Size it with our
+  <a href="/tools/intake-cost-calculator.html">cost calculator</a> before pointing real traffic at it.</li>
+</ul>
+<h2>Verify before trusting it</h2>
+<ol>
+<li>Submit a new test lead. Check HubSpot: one contact, one deal, and the deal's Contacts panel
+   shows the contact. Check the lead inbox: one acknowledgement.</li>
+<li>Wait at least a minute (so HubSpot's search index catches up; within seconds a duplicate can
+   slip past the search, as we observed at 29 milliseconds), then submit the same lead again.
+   Check Make's run history: the run should show the existing-contact path (module 6), and the
+   lead inbox should hold no second acknowledgement.</li>
+<li>Open module 12, add a letter to <code>deal_to_contact</code> in the URL, and save. Submit a third, new
+   test lead. Expected, based on our v2 run: the run ends without error, the lead still gets the
+   acknowledgement, your alert address receives an email naming the failed step, and the scenario
+   stays active (check its on/off toggle). The deal is created but not linked.</li>
+<li>Restore the URL, save, and submit one more new lead to confirm the healthy path again.</li>
+</ol>
+<h2>Known limits of this template</h2>
+<ul>
+<li>v2 error handling was observed once per case. Re-test in your own account.</li>
+<li>A handled association failure leaves the deal unlinked; the alert reports the failed step and
+  points you to the run history. Linking the deal is a manual step.</li>
+<li>A handled duplicate that slips past the search is dropped, not merged into the existing contact.</li>
+<li>Full name lands in HubSpot's first-name field; no first/last split.</li>
+<li>Free-plan execution logs are retained 7 days (make.com/en/pricing, checked on 2026-08-20).</li>
+</ul>
+<p><strong>Who this is for:</strong> a solo consultant or small agency who wants this exact workflow and is
+willing to verify it with the four submissions above. <strong>Who should skip it:</strong> if a simple
+form-to-contact capture is enough, HubSpot's free form builder does that with no Make at all
+(checked on 2026-08-18), and it is the non-affiliate alternative we would point you to first.</p>
+<hr />
+<p><em>Evidence packs client-intake-v1 and client-intake-v2. Module numbers refer to the blueprint's
+internal IDs. Material statements map to this page's claim ledger; inferences and untested
+expectations are labeled as such.</em></p></main>
+<footer><div class="wrap"><p>Workflow Test Lab. Every recommendation on this site is based on our own documented testing; each page names its test date, the plans used, and its evidence pack. Pages that contain advertising (affiliate) links say so at the top and mark each such link next to the link.</p>
+<p>No tracking cookies, no analytics scripts, no third-party embeds. The cost calculator runs entirely in your browser. Operated from Finland. &copy; 2026</p></div></footer>
+</body></html>

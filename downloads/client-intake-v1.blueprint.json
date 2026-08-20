@@ -1,0 +1,2284 @@
+{
+ "name": "Integration Tally",
+ "flow": [
+  {
+   "id": 2,
+   "module": "tally:watchNewResponse",
+   "version": 1,
+   "parameters": {
+    "__IMTHOOK__": 3503903
+   },
+   "mapper": {},
+   "metadata": {
+    "designer": {
+     "x": 0,
+     "y": 150
+    },
+    "restore": {
+     "parameters": {
+      "__IMTHOOK__": {
+       "data": {
+        "editable": "false"
+       },
+       "label": "Your Tally webhook"
+      }
+     }
+    },
+    "parameters": [
+     {
+      "name": "__IMTHOOK__",
+      "type": "hook:tally",
+      "label": "Webhook",
+      "required": true
+     }
+    ],
+    "interface": [
+     {
+      "name": "eventId",
+      "type": "text",
+      "label": "Event ID"
+     },
+     {
+      "name": "responseId",
+      "type": "text",
+      "label": "Response ID"
+     },
+     {
+      "name": "submissionId",
+      "type": "text",
+      "label": "Submission ID"
+     },
+     {
+      "name": "respondentId",
+      "type": "text",
+      "label": "Respondent ID"
+     },
+     {
+      "name": "formId",
+      "type": "text",
+      "label": "Form ID"
+     },
+     {
+      "name": "formName",
+      "type": "text",
+      "label": "Form Name"
+     },
+     {
+      "name": "createdAt",
+      "type": "date",
+      "label": "Created at"
+     },
+     {
+      "name": "submissionPdfUrl",
+      "type": "url",
+      "label": "Submission PDF URL"
+     },
+     {
+      "name": "submissionPreviewUrl",
+      "type": "url",
+      "label": "Submission Preview URL"
+     },
+     {
+      "name": "fields",
+      "spec": [
+       {
+        "name": "",
+        "type": "text"
+       },
+       {
+        "name": "",
+        "type": "email"
+       },
+       {
+        "name": "",
+        "type": "text"
+       },
+       {
+        "name": "",
+        "spec": {
+         "type": "text"
+        },
+        "type": "array"
+       },
+       {
+        "name": "",
+        "type": "text"
+       }
+      ],
+      "type": "collection",
+      "label": "Fields"
+     },
+     {
+      "name": "fieldsById",
+      "spec": [
+       {
+        "name": "question_9vxaPG",
+        "type": "text",
+        "label": "question_9vxaPG (INPUT_TEXT)"
+       },
+       {
+        "name": "question_VYqdeN",
+        "type": "email",
+        "label": "question_VYqdeN (INPUT_EMAIL)"
+       },
+       {
+        "name": "question_e2yp8q",
+        "type": "text",
+        "label": "question_e2yp8q (INPUT_TEXT)"
+       },
+       {
+        "name": "question_WYQgXJ",
+        "spec": {
+         "type": "text"
+        },
+        "type": "array",
+        "label": "question_WYQgXJ (DROPDOWN)"
+       },
+       {
+        "name": "question_aEkyX9",
+        "type": "text",
+        "label": "question_aEkyX9 (TEXTAREA)"
+       }
+      ],
+      "type": "collection",
+      "label": "Fields by ID"
+     }
+    ]
+   }
+  },
+  {
+   "id": 3,
+   "module": "hubspotcrm:SearchContacts",
+   "version": 2,
+   "parameters": {
+    "__IMTCONN__": 9564051
+   },
+   "mapper": {
+    "limit": "1",
+    "query": "{{2.fieldsById.question_7vj5DL}}",
+    "direction": "DESCENDING",
+    "parseCustomFields": true
+   },
+   "metadata": {
+    "designer": {
+     "x": 300,
+     "y": 150
+    },
+    "restore": {
+     "expect": {
+      "direction": {
+       "label": "Descending"
+      },
+      "propertyName": {
+       "mode": "chose"
+      },
+      "outputProperties": {
+       "mode": "chose"
+      },
+      "parseCustomFields": {
+       "mode": "chose"
+      }
+     },
+     "parameters": {
+      "__IMTCONN__": {
+       "data": {
+        "scoped": "true",
+        "connection": "hubspotcrm"
+       },
+       "label": "Your HubSpot CRM connection"
+      }
+     }
+    },
+    "parameters": [
+     {
+      "name": "__IMTCONN__",
+      "type": "account:hubspotcrm",
+      "label": "Connection",
+      "required": true
+     }
+    ],
+    "expect": [
+     {
+      "name": "outputProperties",
+      "type": "select",
+      "label": "Output Properties",
+      "multiple": true
+     },
+     {
+      "name": "query",
+      "type": "text",
+      "label": "Query"
+     },
+     {
+      "name": "filter",
+      "type": "filter",
+      "label": "Filter search results",
+      "options": {
+       "store": [
+        {
+         "label": "All Contact Notification Recipients",
+         "value": "hs_user_ids_of_all_notification_recipients"
+        },
+        {
+         "label": "Annual Revenue",
+         "value": "annualrevenue"
+        },
+        {
+         "label": "Average Pageviews",
+         "value": "hs_analytics_average_page_views"
+        },
+        {
+         "label": "Bing Click Id",
+         "value": "hs_bing_click_id"
+        },
+        {
+         "label": "Brands",
+         "value": "hs_all_assigned_business_unit_ids"
+        },
+        {
+         "label": "Broadcast Clicks",
+         "value": "hs_social_num_broadcast_clicks"
+        },
+        {
+         "label": "Buying Role",
+         "value": "hs_buying_role"
+        },
+        {
+         "label": "Campaign Of Last Booking In Meetings Tool",
+         "value": "engagements_last_meeting_booked_campaign"
+        },
+        {
+         "label": "Chat Assistant IQL Date",
+         "value": "hs_chat_assistant_iql_date"
+        },
+        {
+         "label": "Chat Assistant Source",
+         "value": "hs_chat_assistant_source"
+        },
+        {
+         "label": "Chat Assistant:Summary",
+         "value": "hs_chat_assistant_summary"
+        },
+        {
+         "label": "ChatGPT Click Id",
+         "value": "hs_chatgpt_click_id"
+        },
+        {
+         "label": "City",
+         "value": "city"
+        },
+        {
+         "label": "Close Date",
+         "value": "closedate"
+        },
+        {
+         "label": "Company Name",
+         "value": "company"
+        },
+        {
+         "label": "Company Size",
+         "value": "company_size"
+        },
+        {
+         "label": "Contact Owner",
+         "value": "hubspot_owner_id"
+        },
+        {
+         "label": "Contact Priority",
+         "value": "hs_predictivescoringtier"
+        },
+        {
+         "label": "Contact Unworked",
+         "value": "hs_is_unworked"
+        },
+        {
+         "label": "Country/Region",
+         "value": "country"
+        },
+        {
+         "label": "Country/Region Code",
+         "value": "hs_country_region_code"
+        },
+        {
+         "label": "Create Date",
+         "value": "createdate"
+        },
+        {
+         "label": "Created By User ID",
+         "value": "hs_created_by_user_id"
+        },
+        {
+         "label": "Cumulative Time In \"Customer (Lifecycle Stage Pipeline)\"",
+         "value": "hs_v2_cumulative_time_in_customer"
+        },
+        {
+         "label": "Cumulative Time In \"Evangelist (Lifecycle Stage Pipeline)\"",
+         "value": "hs_v2_cumulative_time_in_evangelist"
+        },
+        {
+         "label": "Cumulative Time In \"Lead (Lifecycle Stage Pipeline)\"",
+         "value": "hs_v2_cumulative_time_in_lead"
+        },
+        {
+         "label": "Cumulative Time In \"Marketing Qualified Lead (Lifecycle Stage Pipeline)\"",
+         "value": "hs_v2_cumulative_time_in_marketingqualifiedlead"
+        },
+        {
+         "label": "Cumulative Time In \"Opportunity (Lifecycle Stage Pipeline)\"",
+         "value": "hs_v2_cumulative_time_in_opportunity"
+        },
+        {
+         "label": "Cumulative Time In \"Other (Lifecycle Stage Pipeline)\"",
+         "value": "hs_v2_cumulative_time_in_other"
+        },
+        {
+         "label": "Cumulative Time In \"Sales Qualified Lead (Lifecycle Stage Pipeline)\"",
+         "value": "hs_v2_cumulative_time_in_salesqualifiedlead"
+        },
+        {
+         "label": "Cumulative Time In \"Subscriber (Lifecycle Stage Pipeline)\"",
+         "value": "hs_v2_cumulative_time_in_subscriber"
+        },
+        {
+         "label": "Current Customer",
+         "value": "hs_current_customer"
+        },
+        {
+         "label": "Currently Enrolled In Prospecting Agent",
+         "value": "hs_currently_enrolled_in_prospecting_agent"
+        },
+        {
+         "label": "Currently In Sequence",
+         "value": "hs_sequences_is_enrolled"
+        },
+        {
+         "label": "Customer Agent Lead Status",
+         "value": "hs_customer_agent_lead_status"
+        },
+        {
+         "label": "Date Entered \"Customer (Lifecycle Stage Pipeline)\"",
+         "value": "hs_v2_date_entered_customer"
+        },
+        {
+         "label": "Date Entered \"Evangelist (Lifecycle Stage Pipeline)\"",
+         "value": "hs_v2_date_entered_evangelist"
+        },
+        {
+         "label": "Date Entered \"Lead (Lifecycle Stage Pipeline)\"",
+         "value": "hs_v2_date_entered_lead"
+        },
+        {
+         "label": "Date Entered \"Marketing Qualified Lead (Lifecycle Stage Pipeline)\"",
+         "value": "hs_v2_date_entered_marketingqualifiedlead"
+        },
+        {
+         "label": "Date Entered \"Opportunity (Lifecycle Stage Pipeline)\"",
+         "value": "hs_v2_date_entered_opportunity"
+        },
+        {
+         "label": "Date Entered \"Other (Lifecycle Stage Pipeline)\"",
+         "value": "hs_v2_date_entered_other"
+        },
+        {
+         "label": "Date Entered \"Sales Qualified Lead (Lifecycle Stage Pipeline)\"",
+         "value": "hs_v2_date_entered_salesqualifiedlead"
+        },
+        {
+         "label": "Date Entered \"Subscriber (Lifecycle Stage Pipeline)\"",
+         "value": "hs_v2_date_entered_subscriber"
+        },
+        {
+         "label": "Date Entered Current Stage",
+         "value": "hs_v2_date_entered_current_stage"
+        },
+        {
+         "label": "Date Exited \"Customer (Lifecycle Stage Pipeline)\"",
+         "value": "hs_v2_date_exited_customer"
+        },
+        {
+         "label": "Date Exited \"Evangelist (Lifecycle Stage Pipeline)\"",
+         "value": "hs_v2_date_exited_evangelist"
+        },
+        {
+         "label": "Date Exited \"Lead (Lifecycle Stage Pipeline)\"",
+         "value": "hs_v2_date_exited_lead"
+        },
+        {
+         "label": "Date Exited \"Marketing Qualified Lead (Lifecycle Stage Pipeline)\"",
+         "value": "hs_v2_date_exited_marketingqualifiedlead"
+        },
+        {
+         "label": "Date Exited \"Opportunity (Lifecycle Stage Pipeline)\"",
+         "value": "hs_v2_date_exited_opportunity"
+        },
+        {
+         "label": "Date Exited \"Other (Lifecycle Stage Pipeline)\"",
+         "value": "hs_v2_date_exited_other"
+        },
+        {
+         "label": "Date Exited \"Sales Qualified Lead (Lifecycle Stage Pipeline)\"",
+         "value": "hs_v2_date_exited_salesqualifiedlead"
+        },
+        {
+         "label": "Date Exited \"Subscriber (Lifecycle Stage Pipeline)\"",
+         "value": "hs_v2_date_exited_subscriber"
+        },
+        {
+         "label": "Date Of Birth",
+         "value": "date_of_birth"
+        },
+        {
+         "label": "Date Of First Engagement",
+         "value": "hs_sa_first_engagement_date"
+        },
+        {
+         "label": "Date Of Last Meeting Booked In Meetings Tool",
+         "value": "engagements_last_meeting_booked"
+        },
+        {
+         "label": "Days To Close",
+         "value": "days_to_close"
+        },
+        {
+         "label": "Degree",
+         "value": "degree"
+        },
+        {
+         "label": "Description Of First Engagement",
+         "value": "hs_sa_first_engagement_descr"
+        },
+        {
+         "label": "Domain To Which Registration Email Was Sent",
+         "value": "hs_content_membership_registration_domain_sent_to"
+        },
+        {
+         "label": "Email",
+         "value": "email"
+        },
+        {
+         "label": "Email Address Automated Quarantine Reason",
+         "value": "hs_email_quarantined_reason"
+        },
+        {
+         "label": "Email Address Quarantine Reason",
+         "value": "hs_email_customer_quarantined_reason"
+        },
+        {
+         "label": "Email Address Quarantined",
+         "value": "hs_email_quarantined"
+        },
+        {
+         "label": "Email Confirmed",
+         "value": "hs_content_membership_email_confirmed"
+        },
+        {
+         "label": "Email Domain",
+         "value": "hs_email_domain"
+        },
+        {
+         "label": "Email Engagement Likelihood Category",
+         "value": "hs_email_engagement_likelihood_category"
+        },
+        {
+         "label": "Email Hard Bounce Reason",
+         "value": "hs_email_hard_bounce_reason_enum"
+        },
+        {
+         "label": "Email Live Sourcing Restricted",
+         "value": "hs_email_live_sourcing_restricted"
+        },
+        {
+         "label": "Email Type",
+         "value": "hs_email_type"
+        },
+        {
+         "label": "Employment Change Detected Date",
+         "value": "hs_employment_change_detected_date"
+        },
+        {
+         "label": "Employment Role",
+         "value": "hs_role"
+        },
+        {
+         "label": "Employment Seniority",
+         "value": "hs_seniority"
+        },
+        {
+         "label": "Employment Sub Role",
+         "value": "hs_sub_role"
+        },
+        {
+         "label": "Enrichment Opt Out",
+         "value": "hs_contact_enrichment_opt_out"
+        },
+        {
+         "label": "Enrichment Opt Out Timestamp",
+         "value": "hs_contact_enrichment_opt_out_timestamp"
+        },
+        {
+         "label": "Event Revenue",
+         "value": "hs_analytics_revenue"
+        },
+        {
+         "label": "Facebook Click Id",
+         "value": "hs_facebook_click_id"
+        },
+        {
+         "label": "Facebook Clicks",
+         "value": "hs_social_facebook_clicks"
+        },
+        {
+         "label": "Fax Number",
+         "value": "fax"
+        },
+        {
+         "label": "Field Of Study",
+         "value": "field_of_study"
+        },
+        {
+         "label": "First Closed Order ID",
+         "value": "hs_first_closed_order_id"
+        },
+        {
+         "label": "First Conversion",
+         "value": "first_conversion_event_name"
+        },
+        {
+         "label": "First Conversion Date",
+         "value": "first_conversion_date"
+        },
+        {
+         "label": "First Deal Created Date",
+         "value": "first_deal_created_date"
+        },
+        {
+         "label": "First Marketing Email Click Date",
+         "value": "hs_email_first_click_date"
+        },
+        {
+         "label": "First Marketing Email Open Date",
+         "value": "hs_email_first_open_date"
+        },
+        {
+         "label": "First Marketing Email Reply Date",
+         "value": "hs_email_first_reply_date"
+        },
+        {
+         "label": "First Marketing Email Send Date",
+         "value": "hs_email_first_send_date"
+        },
+        {
+         "label": "First Name",
+         "value": "firstname"
+        },
+        {
+         "label": "First Order Closed Date",
+         "value": "hs_first_order_closed_date"
+        },
+        {
+         "label": "First Page Seen",
+         "value": "hs_analytics_first_url"
+        },
+        {
+         "label": "First Referring Site",
+         "value": "hs_analytics_first_referrer"
+        },
+        {
+         "label": "First Touch Converting Campaign",
+         "value": "hs_analytics_first_touch_converting_campaign"
+        },
+        {
+         "label": "Follower Count",
+         "value": "followercount"
+        },
+        {
+         "label": "GPS Error",
+         "value": "hs_gps_error"
+        },
+        {
+         "label": "Gender",
+         "value": "gender"
+        },
+        {
+         "label": "Google Ad Click Id",
+         "value": "hs_google_click_id"
+        },
+        {
+         "label": "Google Plus Clicks",
+         "value": "hs_social_google_plus_clicks"
+        },
+        {
+         "label": "Graduation Date",
+         "value": "graduation_date"
+        },
+        {
+         "label": "Has Been Enriched",
+         "value": "hs_is_enriched"
+        },
+        {
+         "label": "HubSpot Team",
+         "value": "hubspot_team_id"
+        },
+        {
+         "label": "ID Of First Engagement",
+         "value": "hs_first_engagement_object_id"
+        },
+        {
+         "label": "IP City",
+         "value": "ip_city"
+        },
+        {
+         "label": "IP Country",
+         "value": "ip_country"
+        },
+        {
+         "label": "IP Country Code",
+         "value": "ip_country_code"
+        },
+        {
+         "label": "IP State Code/Region Code",
+         "value": "ip_state_code"
+        },
+        {
+         "label": "IP State/Region",
+         "value": "ip_state"
+        },
+        {
+         "label": "IP Timezone",
+         "value": "hs_ip_timezone"
+        },
+        {
+         "label": "Industry",
+         "value": "industry"
+        },
+        {
+         "label": "Inferred Language Codes",
+         "value": "hs_inferred_language_codes"
+        },
+        {
+         "label": "Intent Signals Active",
+         "value": "hs_intent_signals_enabled"
+        },
+        {
+         "label": "Invalid Email Address",
+         "value": "hs_email_bad_address"
+        },
+        {
+         "label": "Job Change Detected Date",
+         "value": "hs_job_change_detected_date"
+        },
+        {
+         "label": "Job Function",
+         "value": "job_function"
+        },
+        {
+         "label": "Job Title",
+         "value": "jobtitle"
+        },
+        {
+         "label": "Journey Stage",
+         "value": "hs_journey_stage"
+        },
+        {
+         "label": "Klout Score",
+         "value": "kloutscoregeneral"
+        },
+        {
+         "label": "Last Activity Date",
+         "value": "notes_last_updated"
+        },
+        {
+         "label": "Last CES Survey Comment",
+         "value": "hs_feedback_last_ces_survey_follow_up"
+        },
+        {
+         "label": "Last CES Survey Date",
+         "value": "hs_feedback_last_ces_survey_date"
+        },
+        {
+         "label": "Last CES Survey Rating",
+         "value": "hs_feedback_last_ces_survey_rating"
+        },
+        {
+         "label": "Last CSAT Survey Comment",
+         "value": "hs_feedback_last_csat_survey_follow_up"
+        },
+        {
+         "label": "Last CSAT Survey Date",
+         "value": "hs_feedback_last_csat_survey_date"
+        },
+        {
+         "label": "Last CSAT Survey Rating",
+         "value": "hs_feedback_last_csat_survey_rating"
+        },
+        {
+         "label": "Last Contacted",
+         "value": "notes_last_contacted"
+        },
+        {
+         "label": "Last Engagement Date",
+         "value": "hs_last_sales_activity_timestamp"
+        },
+        {
+         "label": "Last Marketing Email Click Date",
+         "value": "hs_email_last_click_date"
+        },
+        {
+         "label": "Last Marketing Email Name",
+         "value": "hs_email_last_email_name"
+        },
+        {
+         "label": "Last Marketing Email Open Date",
+         "value": "hs_email_last_open_date"
+        },
+        {
+         "label": "Last Marketing Email Reply Date",
+         "value": "hs_email_last_reply_date"
+        },
+        {
+         "label": "Last Marketing Email Send Date",
+         "value": "hs_email_last_send_date"
+        },
+        {
+         "label": "Last Modified Date",
+         "value": "lastmodifieddate"
+        },
+        {
+         "label": "Last NPS Survey Comment",
+         "value": "hs_feedback_last_nps_follow_up"
+        },
+        {
+         "label": "Last NPS Survey Date",
+         "value": "hs_feedback_last_survey_date"
+        },
+        {
+         "label": "Last Name",
+         "value": "lastname"
+        },
+        {
+         "label": "Last Page Seen",
+         "value": "hs_analytics_last_url"
+        },
+        {
+         "label": "Last Referring Site",
+         "value": "hs_analytics_last_referrer"
+        },
+        {
+         "label": "Last Sequence Ended Date",
+         "value": "hs_latest_sequence_ended_date"
+        },
+        {
+         "label": "Last Sequence Enrolled",
+         "value": "hs_latest_sequence_enrolled"
+        },
+        {
+         "label": "Last Sequence Enrolled Date",
+         "value": "hs_latest_sequence_enrolled_date"
+        },
+        {
+         "label": "Last Touch Converting Campaign",
+         "value": "hs_analytics_last_touch_converting_campaign"
+        },
+        {
+         "label": "Latest Disqualified Lead Date",
+         "value": "hs_latest_disqualified_lead_date"
+        },
+        {
+         "label": "Latest NPS Survey Rating",
+         "value": "hs_feedback_last_nps_rating_number"
+        },
+        {
+         "label": "Latest Open Lead Date",
+         "value": "hs_latest_open_lead_date"
+        },
+        {
+         "label": "Latest Qualified Lead Date",
+         "value": "hs_latest_qualified_lead_date"
+        },
+        {
+         "label": "Latest Time In \"Customer (Lifecycle Stage Pipeline)\"",
+         "value": "hs_v2_latest_time_in_customer"
+        },
+        {
+         "label": "Latest Time In \"Evangelist (Lifecycle Stage Pipeline)\"",
+         "value": "hs_v2_latest_time_in_evangelist"
+        },
+        {
+         "label": "Latest Time In \"Lead (Lifecycle Stage Pipeline)\"",
+         "value": "hs_v2_latest_time_in_lead"
+        },
+        {
+         "label": "Latest Time In \"Marketing Qualified Lead (Lifecycle Stage Pipeline)\"",
+         "value": "hs_v2_latest_time_in_marketingqualifiedlead"
+        },
+        {
+         "label": "Latest Time In \"Opportunity (Lifecycle Stage Pipeline)\"",
+         "value": "hs_v2_latest_time_in_opportunity"
+        },
+        {
+         "label": "Latest Time In \"Other (Lifecycle Stage Pipeline)\"",
+         "value": "hs_v2_latest_time_in_other"
+        },
+        {
+         "label": "Latest Time In \"Sales Qualified Lead (Lifecycle Stage Pipeline)\"",
+         "value": "hs_v2_latest_time_in_salesqualifiedlead"
+        },
+        {
+         "label": "Latest Time In \"Subscriber (Lifecycle Stage Pipeline)\"",
+         "value": "hs_v2_latest_time_in_subscriber"
+        },
+        {
+         "label": "Latest Traffic Source",
+         "value": "hs_latest_source"
+        },
+        {
+         "label": "Latest Traffic Source Date",
+         "value": "hs_latest_source_timestamp"
+        },
+        {
+         "label": "Latest Traffic Source Drill-Down 1",
+         "value": "hs_latest_source_data_1"
+        },
+        {
+         "label": "Latest Traffic Source Drill-Down 2",
+         "value": "hs_latest_source_data_2"
+        },
+        {
+         "label": "Latitude",
+         "value": "hs_latitude"
+        },
+        {
+         "label": "Lead Rating",
+         "value": "hs_predictivecontactscorebucket"
+        },
+        {
+         "label": "Lead Response Time",
+         "value": "hs_time_to_first_engagement"
+        },
+        {
+         "label": "Lead Status",
+         "value": "hs_lead_status"
+        },
+        {
+         "label": "Legal Basis For Processing Contact's Data",
+         "value": "hs_legal_basis"
+        },
+        {
+         "label": "Lifecycle Stage",
+         "value": "lifecyclestage"
+        },
+        {
+         "label": "Likelihood To Close",
+         "value": "hs_predictivecontactscore_v2"
+        },
+        {
+         "label": "LinkedIn Bio",
+         "value": "linkedinbio"
+        },
+        {
+         "label": "LinkedIn Click Id",
+         "value": "hs_linkedin_click_id"
+        },
+        {
+         "label": "LinkedIn Clicks",
+         "value": "hs_social_linkedin_clicks"
+        },
+        {
+         "label": "LinkedIn Connections",
+         "value": "linkedinconnections"
+        },
+        {
+         "label": "LinkedIn URL",
+         "value": "hs_linkedin_url"
+        },
+        {
+         "label": "Longitude",
+         "value": "hs_longitude"
+        },
+        {
+         "label": "Marital Status",
+         "value": "marital_status"
+        },
+        {
+         "label": "Marketing Contact Status",
+         "value": "hs_marketable_status"
+        },
+        {
+         "label": "Marketing Contact Status Source Name",
+         "value": "hs_marketable_reason_id"
+        },
+        {
+         "label": "Marketing Contact Status Source Type",
+         "value": "hs_marketable_reason_type"
+        },
+        {
+         "label": "Marketing Contact Until Next Update",
+         "value": "hs_marketable_until_renewal"
+        },
+        {
+         "label": "Marketing Email Confirmation Status",
+         "value": "hs_emailconfirmationstatus"
+        },
+        {
+         "label": "Marketing Emails Bounced",
+         "value": "hs_email_bounce"
+        },
+        {
+         "label": "Marketing Emails Clicked",
+         "value": "hs_email_click"
+        },
+        {
+         "label": "Marketing Emails Delivered",
+         "value": "hs_email_delivered"
+        },
+        {
+         "label": "Marketing Emails Opened",
+         "value": "hs_email_open"
+        },
+        {
+         "label": "Marketing Emails Replied",
+         "value": "hs_email_replied"
+        },
+        {
+         "label": "Medium Of Last Booking In Meetings Tool",
+         "value": "engagements_last_meeting_booked_medium"
+        },
+        {
+         "label": "Member Email",
+         "value": "hs_content_membership_email"
+        },
+        {
+         "label": "Member Has Accessed Private Content",
+         "value": "hs_membership_has_accessed_private_content"
+        },
+        {
+         "label": "Membership Last Private Content Access Date",
+         "value": "hs_membership_last_private_content_access_date"
+        },
+        {
+         "label": "Membership Notes",
+         "value": "hs_content_membership_notes"
+        },
+        {
+         "label": "Merged Contact IDs",
+         "value": "hs_merged_object_ids"
+        },
+        {
+         "label": "Message",
+         "value": "message"
+        },
+        {
+         "label": "Military Status",
+         "value": "military_status"
+        },
+        {
+         "label": "Mobile Phone Number",
+         "value": "mobilephone"
+        },
+        {
+         "label": "Most Recent Social Click",
+         "value": "hs_social_last_engagement"
+        },
+        {
+         "label": "Next Activity Date",
+         "value": "notes_next_activity_date"
+        },
+        {
+         "label": "Next Renewal Date",
+         "value": "hs_next_renewal_date"
+        },
+        {
+         "label": "Number Of Active Contracts",
+         "value": "hs_num_active_contracts"
+        },
+        {
+         "label": "Number Of Associated Deals",
+         "value": "num_associated_deals"
+        },
+        {
+         "label": "Number Of Employees",
+         "value": "numemployees"
+        },
+        {
+         "label": "Number Of Event Completions",
+         "value": "hs_analytics_num_event_completions"
+        },
+        {
+         "label": "Number Of Form Submissions",
+         "value": "num_conversion_events"
+        },
+        {
+         "label": "Number Of Open Deals",
+         "value": "hs_num_associated_open_deals"
+        },
+        {
+         "label": "Number Of Pageviews",
+         "value": "hs_analytics_num_page_views"
+        },
+        {
+         "label": "Number Of Sales Activities",
+         "value": "num_notes"
+        },
+        {
+         "label": "Number Of Sequences Enrolled",
+         "value": "hs_sequences_enrolled_count"
+        },
+        {
+         "label": "Number Of Sessions",
+         "value": "hs_analytics_num_visits"
+        },
+        {
+         "label": "Number Of Times Contacted",
+         "value": "num_contacted_notes"
+        },
+        {
+         "label": "Number Of Unique Forms Submitted",
+         "value": "num_unique_conversion_events"
+        },
+        {
+         "label": "Opted Out Of Email: Marketing Information",
+         "value": "hs_email_optout_3308252181"
+        },
+        {
+         "label": "Opted Out Of Email: One To One",
+         "value": "hs_email_optout_3308252180"
+        },
+        {
+         "label": "Original Traffic Source",
+         "value": "hs_analytics_source"
+        },
+        {
+         "label": "Original Traffic Source Drill-Down 1",
+         "value": "hs_analytics_source_data_1"
+        },
+        {
+         "label": "Original Traffic Source Drill-Down 2",
+         "value": "hs_analytics_source_data_2"
+        },
+        {
+         "label": "Owner Assigned Date",
+         "value": "hubspot_owner_assigneddate"
+        },
+        {
+         "label": "Persona",
+         "value": "hs_persona"
+        },
+        {
+         "label": "Phone Number",
+         "value": "phone"
+        },
+        {
+         "label": "Postal Code",
+         "value": "zip"
+        },
+        {
+         "label": "Predictive Lead Score",
+         "value": "hs_predictivecontactscore"
+        },
+        {
+         "label": "Preferred Language",
+         "value": "hs_language"
+        },
+        {
+         "label": "Prospecting Agent Enrollment Status",
+         "value": "hs_prospecting_agent_enrollment_status"
+        },
+        {
+         "label": "Prospecting Agent Last Enrolled",
+         "value": "hs_prospecting_agent_last_enrolled"
+        },
+        {
+         "label": "Prospecting Agent Sender",
+         "value": "hs_prospecting_agent_sender"
+        },
+        {
+         "label": "Prospecting Agent Total Enrolled Count",
+         "value": "hs_prospecting_agent_total_enrolled_count"
+        },
+        {
+         "label": "Quarantined Emails",
+         "value": "hs_quarantined_emails"
+        },
+        {
+         "label": "Recent Closed Order Date",
+         "value": "hs_recent_closed_order_date"
+        },
+        {
+         "label": "Recent Conversion",
+         "value": "recent_conversion_event_name"
+        },
+        {
+         "label": "Recent Conversion Date",
+         "value": "recent_conversion_date"
+        },
+        {
+         "label": "Recent Deal Amount",
+         "value": "recent_deal_amount"
+        },
+        {
+         "label": "Recent Deal Close Date",
+         "value": "recent_deal_close_date"
+        },
+        {
+         "label": "Recent Sales Email Clicked Date",
+         "value": "hs_sales_email_last_clicked"
+        },
+        {
+         "label": "Recent Sales Email Opened Date",
+         "value": "hs_sales_email_last_opened"
+        },
+        {
+         "label": "Recent Sales Email Replied Date",
+         "value": "hs_sales_email_last_replied"
+        },
+        {
+         "label": "Record ID",
+         "value": "hs_object_id"
+        },
+        {
+         "label": "Record Source",
+         "value": "hs_object_source_label"
+        },
+        {
+         "label": "Record Source Detail 1",
+         "value": "hs_object_source_detail_1"
+        },
+        {
+         "label": "Record Source Detail 2",
+         "value": "hs_object_source_detail_2"
+        },
+        {
+         "label": "Record Source Detail 3",
+         "value": "hs_object_source_detail_3"
+        },
+        {
+         "label": "Reddit Click Id",
+         "value": "hs_reddit_click_id"
+        },
+        {
+         "label": "Registered At",
+         "value": "hs_content_membership_registered_at"
+        },
+        {
+         "label": "Registered Member",
+         "value": "hs_registered_member"
+        },
+        {
+         "label": "Registration Method",
+         "value": "hs_registration_method"
+        },
+        {
+         "label": "Relationship Status",
+         "value": "relationship_status"
+        },
+        {
+         "label": "Returning To Office Detected Date",
+         "value": "hs_returning_to_office_detected_date"
+        },
+        {
+         "label": "Salutation",
+         "value": "salutation"
+        },
+        {
+         "label": "School",
+         "value": "school"
+        },
+        {
+         "label": "Sends Since Last Engagement",
+         "value": "hs_email_sends_since_last_engagement"
+        },
+        {
+         "label": "Seniority",
+         "value": "seniority"
+        },
+        {
+         "label": "Shared Teams",
+         "value": "hs_shared_team_ids"
+        },
+        {
+         "label": "Shared Users",
+         "value": "hs_shared_user_ids"
+        },
+        {
+         "label": "Source Of Last Booking In Meetings Tool",
+         "value": "engagements_last_meeting_booked_source"
+        },
+        {
+         "label": "Start Date",
+         "value": "start_date"
+        },
+        {
+         "label": "State/Region",
+         "value": "state"
+        },
+        {
+         "label": "State/Region Code",
+         "value": "hs_state_code"
+        },
+        {
+         "label": "Status",
+         "value": "hs_content_membership_status"
+        },
+        {
+         "label": "Street Address",
+         "value": "address"
+        },
+        {
+         "label": "TikTok Click Id",
+         "value": "hs_tiktok_click_id"
+        },
+        {
+         "label": "Time Between Contact Creation And Deal Close",
+         "value": "hs_time_between_contact_creation_and_deal_close"
+        },
+        {
+         "label": "Time Between Contact Creation And Deal Creation",
+         "value": "hs_time_between_contact_creation_and_deal_creation"
+        },
+        {
+         "label": "Time Enrolled In Registration Follow Up Emails",
+         "value": "hs_content_membership_follow_up_enqueued_at"
+        },
+        {
+         "label": "Time First Seen",
+         "value": "hs_analytics_first_timestamp"
+        },
+        {
+         "label": "Time In Current Stage",
+         "value": "hs_v2_time_in_current_stage"
+        },
+        {
+         "label": "Time Last Seen",
+         "value": "hs_analytics_last_timestamp"
+        },
+        {
+         "label": "Time Of First Session",
+         "value": "hs_analytics_first_visit_timestamp"
+        },
+        {
+         "label": "Time Of Last Session",
+         "value": "hs_analytics_last_visit_timestamp"
+        },
+        {
+         "label": "Time Registration Email Was Sent",
+         "value": "hs_content_membership_registration_email_sent_at"
+        },
+        {
+         "label": "Time To Move From Lead To Customer",
+         "value": "hs_time_to_move_from_lead_to_customer"
+        },
+        {
+         "label": "Time To Move From Marketing Qualified Lead To Customer",
+         "value": "hs_time_to_move_from_marketingqualifiedlead_to_customer"
+        },
+        {
+         "label": "Time To Move From Opportunity To Customer",
+         "value": "hs_time_to_move_from_opportunity_to_customer"
+        },
+        {
+         "label": "Time To Move From Sales Qualified Lead To Customer",
+         "value": "hs_time_to_move_from_salesqualifiedlead_to_customer"
+        },
+        {
+         "label": "Time To Move From Subscriber To Customer",
+         "value": "hs_time_to_move_from_subscriber_to_customer"
+        },
+        {
+         "label": "Time Zone",
+         "value": "hs_timezone"
+        },
+        {
+         "label": "Total Revenue",
+         "value": "total_revenue"
+        },
+        {
+         "label": "Twitter Bio",
+         "value": "twitterbio"
+        },
+        {
+         "label": "Twitter Clicks",
+         "value": "hs_social_twitter_clicks"
+        },
+        {
+         "label": "Twitter Profile Photo",
+         "value": "twitterprofilephoto"
+        },
+        {
+         "label": "Twitter Username",
+         "value": "twitterhandle"
+        },
+        {
+         "label": "Type Of First Engagement",
+         "value": "hs_sa_first_engagement_object_type"
+        },
+        {
+         "label": "Unsubscribed From All Email",
+         "value": "hs_email_optout"
+        },
+        {
+         "label": "Unsubscribed From Email Subscription Types",
+         "value": "hs_email_communication_subscriptions_opted_out"
+        },
+        {
+         "label": "Updated By User ID",
+         "value": "hs_updated_by_user_id"
+        },
+        {
+         "label": "Website URL",
+         "value": "website"
+        },
+        {
+         "label": "WhatsApp BSUIDs",
+         "value": "hs_whatsapp_bsuids"
+        },
+        {
+         "label": "WhatsApp Phone Number",
+         "value": "hs_whatsapp_phone_number"
+        },
+        {
+         "label": "Why This Contact",
+         "value": "hs_why_this_contact"
+        },
+        {
+         "label": "Work Email",
+         "value": "work_email"
+        }
+       ],
+       "operators": [
+        {
+         "label": "Operators",
+         "options": [
+          {
+           "label": "Equal to",
+           "value": "EQ"
+          },
+          {
+           "label": "Not Equal to",
+           "value": "NEQ"
+          },
+          {
+           "label": "Less Than",
+           "value": "LT"
+          },
+          {
+           "label": "Less Than or Equal to",
+           "value": "LTE"
+          },
+          {
+           "label": "Greater Than",
+           "value": "GT"
+          },
+          {
+           "label": "Greater Than or Equal to",
+           "value": "GTE"
+          },
+          {
+           "label": "Contains Token",
+           "value": "CONTAINS_TOKEN"
+          },
+          {
+           "label": "Does Not Contain Token",
+           "value": "NOT_CONTAINS_TOKEN"
+          },
+          {
+           "label": "Has Property Value",
+           "value": "HAS_PROPERTY"
+          },
+          {
+           "label": "Does Not Have Property Value",
+           "value": "NOT_HAS_PROPERTY"
+          },
+          {
+           "label": "between (provide an array of 2 values)",
+           "value": "BETWEEN"
+          },
+          {
+           "label": "in (provide an array of values)",
+           "value": "IN"
+          },
+          {
+           "label": "not in (provide an array of values)",
+           "value": "NOT_IN"
+          }
+         ]
+        }
+       ]
+      }
+     },
+     {
+      "name": "propertyName",
+      "type": "select",
+      "label": "Sort by Property Name"
+     },
+     {
+      "name": "direction",
+      "type": "select",
+      "label": "Sorting Direction",
+      "validate": {
+       "enum": [
+        "DESCENDING",
+        "ASCENDING"
+       ]
+      }
+     },
+     {
+      "name": "cursor",
+      "type": "text",
+      "label": "Paging Cursor"
+     },
+     {
+      "name": "parseCustomFields",
+      "type": "boolean",
+      "label": "Parse Custom Fields",
+      "required": true
+     },
+     {
+      "name": "limit",
+      "type": "uinteger",
+      "label": "Limit"
+     }
+    ],
+    "advanced": true
+   }
+  },
+  {
+   "id": 4,
+   "module": "builtin:BasicRouter",
+   "version": 1,
+   "mapper": null,
+   "metadata": {
+    "designer": {
+     "x": 600,
+     "y": 150
+    }
+   },
+   "routes": [
+    {
+     "flow": [
+      {
+       "id": 5,
+       "module": "hubspotcrm:createContact",
+       "version": 2,
+       "parameters": {
+        "__IMTCONN__": 9564051
+       },
+       "filter": {
+        "name": "New lead",
+        "conditions": [
+         [
+          {
+           "a": "{{3.id}}",
+           "o": "notexist"
+          }
+         ]
+        ]
+       },
+       "mapper": {
+        "_method": "compact",
+        "properties": [
+         {
+          "key": "email",
+          "value": "{{2.fieldsById.question_7vj5DL}}"
+         },
+         {
+          "key": "firstname",
+          "value": "{{2.fieldsById.question_6v45ke}}"
+         },
+         {
+          "key": "company",
+          "value": "{{2.fieldsById.question_brgGke}}"
+         }
+        ],
+        "parseCustomFields": true
+       },
+       "metadata": {
+        "designer": {
+         "x": 900,
+         "y": 0
+        },
+        "restore": {
+         "expect": {
+          "_method": {
+           "mode": "chose",
+           "label": "Compact"
+          },
+          "properties": {
+           "mode": "chose",
+           "items": [
+            {
+             "key": {
+              "mode": "chose",
+              "label": "Email"
+             }
+            },
+            {
+             "key": {
+              "mode": "chose",
+              "label": "First Name"
+             }
+            },
+            {
+             "key": {
+              "mode": "chose",
+              "label": "Company Name"
+             }
+            }
+           ]
+          },
+          "parseCustomFields": {
+           "mode": "chose"
+          }
+         },
+         "parameters": {
+          "__IMTCONN__": {
+           "data": {
+            "scoped": "true",
+            "connection": "hubspotcrm"
+           },
+           "label": "Your HubSpot CRM connection"
+          }
+         }
+        },
+        "parameters": [
+         {
+          "name": "__IMTCONN__",
+          "type": "account:hubspotcrm",
+          "label": "Connection",
+          "required": true
+         }
+        ],
+        "expect": [
+         {
+          "name": "_method",
+          "type": "select",
+          "label": "View Method",
+          "required": true,
+          "validate": {
+           "enum": [
+            "compact",
+            "all"
+           ]
+          }
+         },
+         {
+          "name": "parseCustomFields",
+          "type": "boolean",
+          "label": "Parse Custom Fields",
+          "required": true
+         },
+         {
+          "name": "properties",
+          "spec": [
+           {
+            "name": "key",
+            "type": "select",
+            "label": "Key",
+            "dynamic": true,
+            "options": []
+           },
+           {
+            "name": "value",
+            "type": "any",
+            "label": "Value"
+           }
+          ],
+          "type": "array",
+          "label": "Properties"
+         }
+        ]
+       }
+      },
+      {
+       "id": 7,
+       "module": "hubspotcrm:createDeal",
+       "version": 2,
+       "parameters": {
+        "__IMTCONN__": 9564051
+       },
+       "mapper": {
+        "_method": "compact",
+        "properties": [
+         {
+          "key": "dealname",
+          "value": "{{2.fieldsById.question_6v45ke}}- Client intake"
+         },
+         {
+          "key": "dealstage",
+          "value": "appointmentscheduled"
+         },
+         {
+          "key": "pipeline",
+          "value": "default"
+         }
+        ],
+        "parseCustomFields": true
+       },
+       "metadata": {
+        "designer": {
+         "x": 1200,
+         "y": 0
+        },
+        "restore": {
+         "expect": {
+          "_method": {
+           "mode": "chose",
+           "label": "Compact"
+          },
+          "properties": {
+           "mode": "chose",
+           "items": [
+            {
+             "key": {
+              "mode": "chose",
+              "label": "Deal Name"
+             }
+            },
+            {
+             "key": {
+              "mode": "chose",
+              "label": "Deal Stage"
+             }
+            },
+            {
+             "key": {
+              "mode": "chose",
+              "label": "Pipeline"
+             }
+            }
+           ]
+          },
+          "parseCustomFields": {
+           "mode": "chose"
+          }
+         },
+         "parameters": {
+          "__IMTCONN__": {
+           "data": {
+            "scoped": "true",
+            "connection": "hubspotcrm"
+           },
+           "label": "Your HubSpot CRM connection"
+          }
+         }
+        },
+        "parameters": [
+         {
+          "name": "__IMTCONN__",
+          "type": "account:hubspotcrm",
+          "label": "Connection",
+          "required": true
+         }
+        ],
+        "expect": [
+         {
+          "name": "_method",
+          "type": "select",
+          "label": "View Method",
+          "required": true,
+          "validate": {
+           "enum": [
+            "compact",
+            "all"
+           ]
+          }
+         },
+         {
+          "name": "parseCustomFields",
+          "type": "boolean",
+          "label": "Parse Custom Fields",
+          "required": true
+         },
+         {
+          "name": "properties",
+          "spec": [
+           {
+            "name": "key",
+            "type": "select",
+            "label": "Key",
+            "dynamic": true,
+            "options": []
+           },
+           {
+            "name": "value",
+            "type": "any",
+            "label": "Value"
+           }
+          ],
+          "type": "array",
+          "label": "Properties"
+         }
+        ]
+       }
+      },
+      {
+       "id": 12,
+       "module": "hubspotcrm:MakeAPICall",
+       "version": 2,
+       "parameters": {
+        "__IMTCONN__": 9564051
+       },
+       "mapper": {
+        "url": "/crm/v3/objects/deals/{{7.id}}/associations/contacts/{{5.id}}/deal_to_contact",
+        "method": "PUT",
+        "headers": [
+         {
+          "key": "Content-Type",
+          "value": "application/json"
+         }
+        ]
+       },
+       "metadata": {
+        "designer": {
+         "x": 1500,
+         "y": 0
+        },
+        "restore": {
+         "parameters": {
+          "__IMTCONN__": {
+           "label": "Your HubSpot CRM connection",
+           "data": {
+            "scoped": "true",
+            "connection": "hubspotcrm"
+           }
+          }
+         },
+         "expect": {
+          "method": {
+           "mode": "chose",
+           "label": "PUT"
+          },
+          "headers": {
+           "mode": "chose",
+           "items": [
+            null
+           ]
+          },
+          "qs": {
+           "mode": "chose"
+          }
+         }
+        },
+        "parameters": [
+         {
+          "name": "__IMTCONN__",
+          "type": "account:hubspotcrm",
+          "label": "Connection",
+          "required": true
+         }
+        ],
+        "expect": [
+         {
+          "name": "url",
+          "type": "text",
+          "label": "URL",
+          "required": true
+         },
+         {
+          "name": "method",
+          "type": "select",
+          "label": "Method",
+          "required": true,
+          "validate": {
+           "enum": [
+            "GET",
+            "POST",
+            "PUT",
+            "PATCH",
+            "DELETE"
+           ]
+          }
+         },
+         {
+          "name": "headers",
+          "type": "array",
+          "label": "Headers",
+          "spec": [
+           {
+            "name": "key",
+            "type": "text",
+            "label": "Key"
+           },
+           {
+            "name": "value",
+            "type": "text",
+            "label": "Value"
+           }
+          ]
+         },
+         {
+          "name": "qs",
+          "type": "array",
+          "label": "Query String",
+          "spec": [
+           {
+            "name": "key",
+            "type": "text",
+            "label": "Key"
+           },
+           {
+            "name": "value",
+            "type": "text",
+            "label": "Value"
+           }
+          ]
+         },
+         {
+          "name": "body",
+          "type": "any",
+          "label": "Body"
+         }
+        ]
+       }
+      },
+      {
+       "id": 13,
+       "module": "sendinblue:SendEmail",
+       "version": 2,
+       "parameters": {
+        "__IMTCONN__": 9840364
+       },
+       "mapper": {
+        "to": [
+         {
+          "email": "{{2.fieldsById.question_7vj5DL}}"
+         }
+        ],
+        "sender": {
+         "name": "Your Company",
+         "email": "sender@example.com"
+        },
+        "replyTo": {
+         "name": "Your Company",
+         "email": "sender@example.com"
+        },
+        "subject": "We received your request - Your Company",
+        "textContent": "Hi {{2.fieldsById.question_6v45ke}}, Thanks for reaching out! We received your request and will get back to you within one business day.\r\n\r\nIf you have anything to add in the meantime, just reply to this email.\r\n\r\nBest regards,\r\nYour Company"
+       },
+       "metadata": {
+        "designer": {
+         "x": 1800,
+         "y": 0
+        },
+        "restore": {
+         "expect": {
+          "cc": {
+           "mode": "chose"
+          },
+          "to": {
+           "mode": "chose",
+           "items": [
+            null
+           ]
+          },
+          "bcc": {
+           "mode": "chose"
+          },
+          "tags": {
+           "mode": "chose"
+          },
+          "params": {
+           "mode": "chose"
+          },
+          "headers": {
+           "mode": "chose"
+          },
+          "attachment": {
+           "mode": "chose"
+          },
+          "templateId": {
+           "mode": "chose"
+          }
+         },
+         "parameters": {
+          "__IMTCONN__": {
+           "data": {
+            "scoped": "true",
+            "connection": "sendinblue2"
+           },
+           "label": "Your Brevo connection"
+          }
+         }
+        },
+        "parameters": [
+         {
+          "name": "__IMTCONN__",
+          "type": "account:sendinblue2",
+          "label": "Connection",
+          "required": true
+         }
+        ],
+        "expect": [
+         {
+          "name": "templateId",
+          "type": "select",
+          "label": "Template"
+         },
+         {
+          "name": "to",
+          "spec": [
+           {
+            "name": "name",
+            "type": "text",
+            "label": "Name"
+           },
+           {
+            "name": "email",
+            "type": "email",
+            "label": "Email",
+            "required": true
+           }
+          ],
+          "type": "array",
+          "label": "To",
+          "required": true
+         },
+         {
+          "name": "subject",
+          "type": "text",
+          "label": "Subject"
+         },
+         {
+          "name": "htmlContent",
+          "type": "text",
+          "label": "HTML body"
+         },
+         {
+          "name": "textContent",
+          "type": "text",
+          "label": "Text body"
+         },
+         {
+          "name": "replyTo",
+          "spec": [
+           {
+            "name": "name",
+            "type": "text",
+            "label": "Name"
+           },
+           {
+            "name": "email",
+            "type": "email",
+            "label": "Email",
+            "required": true
+           }
+          ],
+          "type": "collection",
+          "label": "Reply To",
+          "required": true
+         },
+         {
+          "name": "attachment",
+          "spec": [
+           {
+            "name": "type",
+            "type": "select",
+            "label": "Type",
+            "options": [
+             {
+              "label": "URL",
+              "value": "url",
+              "nested": [
+               {
+                "name": "fileName",
+                "type": "filename",
+                "label": "File name",
+                "required": true
+               },
+               {
+                "name": "url",
+                "type": "url",
+                "label": "Image URL",
+                "required": true
+               }
+              ]
+             },
+             {
+              "label": "Data",
+              "value": "data",
+              "nested": [
+               {
+                "name": "fileName",
+                "type": "filename",
+                "label": "File name",
+                "required": true,
+                "semantic": "file:name"
+               },
+               {
+                "name": "data",
+                "type": "buffer",
+                "label": "Data",
+                "required": true,
+                "semantic": "file:data"
+               }
+              ]
+             }
+            ],
+            "required": true
+           }
+          ],
+          "type": "array",
+          "label": "Attachments"
+         },
+         {
+          "name": "bcc",
+          "spec": [
+           {
+            "name": "name",
+            "type": "text",
+            "label": "Name"
+           },
+           {
+            "name": "email",
+            "type": "email",
+            "label": "Email"
+           }
+          ],
+          "type": "array",
+          "label": "BCC"
+         },
+         {
+          "name": "cc",
+          "spec": [
+           {
+            "name": "name",
+            "type": "text",
+            "label": "Name"
+           },
+           {
+            "name": "email",
+            "type": "email",
+            "label": "Email"
+           }
+          ],
+          "type": "array",
+          "label": "CC"
+         },
+         {
+          "name": "sender",
+          "spec": [
+           {
+            "name": "name",
+            "type": "text",
+            "label": "Name"
+           },
+           {
+            "name": "email",
+            "type": "email",
+            "label": "Email"
+           }
+          ],
+          "type": "collection",
+          "label": "Sender"
+         },
+         {
+          "name": "headers",
+          "spec": [
+           {
+            "name": "name",
+            "type": "text",
+            "label": "Name",
+            "required": true
+           },
+           {
+            "name": "value",
+            "type": "text",
+            "label": "Value",
+            "required": true
+           }
+          ],
+          "type": "array",
+          "label": "Headers"
+         },
+         {
+          "name": "tags",
+          "spec": {
+           "name": "value",
+           "type": "text"
+          },
+          "type": "array",
+          "label": "Tags"
+         },
+         {
+          "name": "params",
+          "spec": [
+           {
+            "name": "name",
+            "type": "text",
+            "label": "Name",
+            "required": true
+           },
+           {
+            "name": "value",
+            "type": "text",
+            "label": "Value",
+            "required": true
+           }
+          ],
+          "type": "array",
+          "label": "Params"
+         }
+        ],
+        "advanced": true
+       }
+      }
+     ]
+    },
+    {
+     "flow": [
+      {
+       "id": 6,
+       "module": "hubspotcrm:updateContact",
+       "version": 2,
+       "parameters": {
+        "__IMTCONN__": 9564051
+       },
+       "filter": {
+        "name": "Existing contacts",
+        "conditions": [
+         [
+          {
+           "a": "{{3.id}}",
+           "o": "exist"
+          }
+         ]
+        ]
+       },
+       "mapper": {
+        "_method": "compact",
+        "contactId": "{{3.id}}",
+        "properties": [
+         {
+          "key": "firstname",
+          "value": "{{2.fieldsById.question_6v45ke}}"
+         },
+         {
+          "key": "company",
+          "value": "{{2.fieldsById.question_brgGke}}"
+         }
+        ],
+        "parseCustomFields": true
+       },
+       "metadata": {
+        "designer": {
+         "x": 900,
+         "y": 300
+        },
+        "restore": {
+         "expect": {
+          "_method": {
+           "mode": "chose",
+           "label": "Compact"
+          },
+          "properties": {
+           "mode": "chose",
+           "items": [
+            {
+             "key": {
+              "mode": "chose",
+              "label": "First Name"
+             }
+            },
+            {
+             "key": {
+              "mode": "chose",
+              "label": "Company Name"
+             }
+            }
+           ]
+          },
+          "parseCustomFields": {
+           "mode": "chose"
+          }
+         },
+         "parameters": {
+          "__IMTCONN__": {
+           "data": {
+            "scoped": "true",
+            "connection": "hubspotcrm"
+           },
+           "label": "Your HubSpot CRM connection"
+          }
+         }
+        },
+        "parameters": [
+         {
+          "name": "__IMTCONN__",
+          "type": "account:hubspotcrm",
+          "label": "Connection",
+          "required": true
+         }
+        ],
+        "expect": [
+         {
+          "name": "contactId",
+          "type": "uinteger",
+          "label": "Contact ID",
+          "required": true
+         },
+         {
+          "name": "_method",
+          "type": "select",
+          "label": "View Method",
+          "required": true,
+          "validate": {
+           "enum": [
+            "compact",
+            "all"
+           ]
+          }
+         },
+         {
+          "name": "parseCustomFields",
+          "type": "boolean",
+          "label": "Parse Custom Fields",
+          "required": true
+         },
+         {
+          "name": "properties",
+          "spec": [
+           {
+            "name": "key",
+            "type": "select",
+            "label": "Key",
+            "dynamic": true,
+            "options": []
+           },
+           {
+            "name": "value",
+            "type": "any",
+            "label": "Value"
+           }
+          ],
+          "type": "array",
+          "label": "Properties"
+         }
+        ]
+       }
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "metadata": {
+  "instant": true,
+  "version": 1,
+  "scenario": {
+   "roundtrips": 1,
+   "maxErrors": 3,
+   "autoCommit": true,
+   "autoCommitTriggerLast": true,
+   "sequential": false,
+   "slots": null,
+   "confidential": false,
+   "dataloss": false,
+   "dlq": false,
+   "freshVariables": false
+  },
+  "designer": {
+   "orphans": []
+  },
+  "zone": "eu1.make.com",
+  "notes": []
+ }
+}

@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tally to HubSpot to follow-up: a tested client-intake workflow for solo consultants | Workflow Test Lab</title><meta name="description" content="Tally to HubSpot to follow-up: a tested client-intake workflow for solo consultants (tested 2026-08-16)">
+<meta name='impact-site-verification' value='68243723-46ca-4e30-aaf0-d4f93802c4c2'>
+<style>
+:root{--bg:#fff;--fg:#1c1c1c;--muted:#5a5a5a;--line:#8a8a8a;--accent:#1f5fbf;--card:#f4f4f4}
+@media (prefers-color-scheme:dark){:root{--bg:#121212;--fg:#ececec;--muted:#b0b0b0;--line:#7a7a7a;--accent:#7fb0ff;--card:#1c1c1c}}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--fg);line-height:1.6}
+header{border-bottom:1px solid var(--line)} .wrap{max-width:820px;margin:0 auto;padding:0 20px}
+header .wrap{display:flex;flex-wrap:wrap;gap:10px 24px;align-items:baseline;padding:14px 20px}
+header a.brand{font-weight:700;text-decoration:none;color:var(--fg)} nav a{margin-right:14px;color:var(--accent);text-decoration:none;font-size:.95rem}
+main.wrap{padding:28px 20px 56px} h1{font-size:1.7rem;line-height:1.25} h2{font-size:1.2rem;margin-top:28px}
+blockquote{border-left:4px solid var(--accent);margin:16px 0;padding:8px 14px;background:var(--card);font-size:.93rem}
+table{border-collapse:collapse;width:100%;font-size:.93rem;display:block;overflow-x:auto} th,td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--line);vertical-align:top}
+code{background:var(--card);padding:1px 5px;border-radius:4px;font-size:.92em} img{max-width:100%;height:auto;border:1px solid var(--line);border-radius:6px}
+footer{border-top:1px solid var(--line);color:var(--muted);font-size:.85rem} footer .wrap{padding:18px 20px 40px}
+.meta{color:var(--muted);font-size:.9rem} .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.card{border:1px solid var(--line);border-radius:10px;padding:14px;background:var(--card)} .card a{color:var(--accent);text-decoration:none;font-weight:600}
+.preview-banner{background:#ffe9b3;color:#4a3300;padding:8px 14px;font-weight:600;text-align:center}
+</style></head><body>
+<header><div class="wrap"><a class="brand" href="/">Workflow Test Lab</a><nav><a href="/">Home</a><a href="/intake-workflow-template/">Template</a><a href="/tested-client-intake-workflow/">Tested workflow</a><a href="/what-breaks-client-intake/">What breaks</a><a href="/who-should-not-use-this-stack/">Who should skip it</a><a href="/tools/intake-cost-calculator.html">Cost calculator</a></nav></div></header>
+<main class="wrap"><blockquote>
+<p><strong>Advertising disclosure:</strong> This page will contain advertising (affiliate) links, marked
+next to each link. If you buy through them, we may earn a commission at no extra cost to
+you. Every recommendation is based on our own documented testing. Test date and evidence
+are shown on this page. (As of publication we have no active affiliate partnerships;
+links are plain product links until noted otherwise.)</p>
+</blockquote>
+<h1>Tally to HubSpot to follow-up: a tested client-intake workflow for solo consultants</h1>
+<p><strong>Tested on 2026-08-16 in two rounds, on the free tier of every tool.</strong> This is not a
+feature tour. We built the workflow, ran ten scripted test cases across the two rounds
+(including two deliberate duplicates and two forced failures, plus build-phase smoke
+tests), counted the operations, and verified the acknowledgement emails from the receiving
+inbox by message ID. The evidence and the exported workflow are linked on this page.</p>
+<h2>The problem this solves</h2>
+<p>A lead fills your contact form. The notification lands in your inbox, you are with a
+client, and by evening it is buried. No CRM record, no reply sent, no follow-up scheduled.</p>
+<p>The workflow below automates the first mile: a form submission becomes a CRM contact with
+a deal attached, and the lead gets an acknowledgement email. In our tests the whole chain
+ran in about one second per lead. The failure modes further down describe the cases where
+it does not, read them before trusting it with real leads.</p>
+<h2>The stack we tested</h2>
+<p>All plans and limits checked on 2026-08-16 unless noted.</p>
+<table>
+<thead>
+<tr>
+<th>Role</th>
+<th>Tool</th>
+<th>Plan</th>
+<th>Monthly cost</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Form</td>
+<td>Tally</td>
+<td>Free</td>
+<td>0 EUR</td>
+</tr>
+<tr>
+<td>Automation</td>
+<td>Make</td>
+<td>Free, 1,000 credits/mo (terminology checked 2026-08-18; simple operations consume 1 credit each)</td>
+<td>0 EUR</td>
+</tr>
+<tr>
+<td>CRM</td>
+<td>HubSpot</td>
+<td>Free CRM</td>
+<td>0 EUR</td>
+</tr>
+<tr>
+<td>Acknowledgement email</td>
+<td>Brevo</td>
+<td>Free, 300 emails/day</td>
+<td>0 EUR</td>
+</tr>
+</tbody>
+</table>
+<h2>What the workflow does</h2>
+<p><img alt="Make scenario chain" src="/img/client-intake-v1_screenshots_run1-make-chain.png" /></p>
+<ol>
+<li><strong>Tally</strong> receives the form submission (name, email, company, service interest, budget, message)</li>
+<li><strong>Make</strong> searches HubSpot for the submitter's email address</li>
+<li><strong>Router</strong>: if the email is new, create a contact, create a deal in the first pipeline
+   stage, link the deal to the contact, and send an acknowledgement email via Brevo. If the
+   email already exists, update the contact and stop. At normal submission pace this
+   produced no duplicate records and no duplicate emails in our tests; see the race window
+   below for the exception.</li>
+</ol>
+<p>One detail that surprised us: Make's "Create a Deal" module has no way to link the deal to
+the contact (we went through its full property list). We had to add a raw HubSpot API call
+for the association; the exact call ships in the downloadable blueprint below. Without it,
+deals float in your CRM disconnected from the people they belong to.</p>
+<h2>What we measured</h2>
+<ul>
+<li><strong>The full chain works.</strong> New-lead cases completed end-to-end in both rounds: contact,
+  deal, association, and acknowledgement email. Round 2 also surfaced a real failure (the
+  race window below), which we count as a result, not a footnote.</li>
+<li><strong>Delivery verified from the receiving inbox.</strong> The acknowledgement arrived in the Gmail
+  inbox (not spam), personalized with the lead's name, in both rounds. We logged the Gmail
+  message IDs so the verification can be repeated.</li>
+<li><strong>A new lead consumes 6 Make credits; a duplicate consumes 3.</strong> At the free 1,000
+  credits per month that is roughly 160 new leads of monthly headroom.</li>
+<li><strong>Duplicate protection held at normal pace.</strong> An identical resubmission ~50 seconds
+  after the original created no second contact, deal, or email, and took the short
+  3-credit path.</li>
+<li><strong>Special characters survive.</strong> A test lead named Søren Ø'Brien-Kärkkäinen with a
+  company called Åland &amp; Partners Oy came through intact into HubSpot.</li>
+</ul>
+<h2>What breaks, honestly</h2>
+<p>We forced failures on purpose in both rounds, and round 2 handed us one for free.
+Three sharp edges, each observed at least twice:</p>
+<ol>
+<li><strong>Failures are silent and partial.</strong> When a mid-workflow step fails, the contact and
+   deal are already created but the acknowledgement email never sends. Your CRM looks
+   fine. The lead waits for a reply that is not coming. (Observed in both forced-failure
+   runs, identical HubSpot 400 responses.)</li>
+<li><strong>One error shuts down the whole automation.</strong> Make deactivates an erroring scenario
+   by itself. Every lead after that queues up unprocessed until a human reactivates the
+   scenario. In our test the queue then flooded in all at once. (Observed twice.)</li>
+<li><strong>Duplicate protection has a race window.</strong> HubSpot's search index lags contact
+   creation by a few seconds. Two submissions of the same email seconds apart can slip
+   past the search check; HubSpot's own uniqueness rule then rejects the duplicate, but
+   as an error, which triggers edge number 2. (Observed once, during a queue drain that
+   replayed submissions back to back.)</li>
+</ol>
+<p>If you run this stack with real leads, add an error-notification route in Make and check
+the scenario regularly; we suggest weekly as a starting point (our judgment, not a tested
+interval). We treat these edges as the price of a free stack, not a reason to avoid it.</p>
+<h2>Build it yourself</h2>
+<p>Setup took us about an hour of focused work across form fields, module mapping, and the
+association API call (estimated from our build log; your pace will vary). The exact
+scenario is available as a Make blueprint export: import it, connect your own Tally,
+HubSpot, and Brevo accounts, and adjust the form field IDs.</p>
+<p><strong>Download:</strong> <code>client-intake-v1.blueprint.json</code> (final link lands here when the template
+page is live; the file is in the evidence pack meanwhile).</p>
+<p>Two setup notes that cost us time so they do not cost you any:</p>
+<ul>
+<li>Make refused to send email through a personal @gmail.com address on both connection
+  types we tried (plain SMTP and Make's restricted Google OAuth). Make's documentation
+  points to a custom Google Cloud OAuth setup as the remaining route; we did not test it
+  and used a transactional service (Brevo) instead, which is the better practice anyway.</li>
+<li>Make's "Run once" does not save your scenario. Save explicitly before closing the
+  browser, or you will rebuild modules like we did.</li>
+</ul>
+<h2>Who this is for, and who should skip it</h2>
+<p><strong>Good fit</strong> (our assessment based on the measured capacity, not a survey): solo
+consultants and 1-5 person agencies whose inbound volume sits comfortably under the ~160
+new leads per month the free tier supports, with no dedicated ops person and a tolerance
+for checking one dashboard regularly.</p>
+<p><strong>Skip this stack if:</strong> you only need form-to-contact capture with no deal creation or
+custom acknowledgement. HubSpot's own free form builder (checked 2026-08-18) does that
+natively with zero automation tooling, and one less thing to break. Also skip it if a
+missed acknowledgement is unacceptable in your business (see the failure modes above), or
+if you are already on a paid CRM with built-in intake automation.</p>
+<p><strong>The non-affiliate alternative:</strong> self-hosted n8n (Community Edition, checked
+2026-08-18) replaces Make with no software subscription fee and no operations cap. You
+pay with your own hosting, maintenance, and time instead; we have not tested this route.</p>
+<hr />
+<p><em>The claims on this page map to the page's claim ledger, which ties each one to a test
+artifact (run histories, screenshots, Gmail message IDs) or a dated external source.
+Evidence pack: client-intake-v1, tested 2026-08-16 in two rounds including two
+forced-failure runs. Pricing and program terms rechecked on the dates shown.</em></p></main>
+<footer><div class="wrap"><p>Workflow Test Lab. Every recommendation on this site is based on our own documented testing; each page names its test date, the plans used, and its evidence pack. Pages that contain advertising (affiliate) links say so at the top and mark each such link next to the link.</p>
+<p>No tracking cookies, no analytics scripts, no third-party embeds. The cost calculator runs entirely in your browser. Operated from Finland. &copy; 2026</p></div></footer>
+</body></html>

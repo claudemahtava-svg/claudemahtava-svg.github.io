@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Client-Intake Automation Cost Calculator</title>
+<meta name="description" content="Estimate Make credits, free-tier headroom and Make plan cost for a Tally + Make + HubSpot + Brevo client-intake workflow, using operation counts measured in our own test runs.">
+<style>
+  :root { --bg:#ffffff; --fg:#1c1c1c; --muted:#5a5a5a; --line:#8a8a8a; --accent:#1f5fbf; --ok:#1e7a3e; --warn:#b35c00; --bad:#b3261e; --card:#f4f4f4; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#121212; --fg:#ececec; --muted:#b0b0b0; --line:#7a7a7a; --accent:#7fb0ff; --ok:#6fcf8e; --warn:#ffb266; --bad:#ff8a80; --card:#1c1c1c; } }
+  body { margin:0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; background:var(--bg); color:var(--fg); line-height:1.5; }
+  main { max-width: 820px; margin: 0 auto; padding: 32px 20px 64px; }
+  h1 { font-size: 1.7rem; margin: 0 0 6px; }
+  h2 { font-size: 1.15rem; margin: 28px 0 10px; }
+  p.lead { color: var(--muted); margin-top: 0; }
+  .notice { border-left: 4px solid var(--accent); padding: 10px 14px; background: var(--card); font-size: .92rem; margin: 18px 0 24px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }
+  label { display:block; font-weight:600; font-size:.92rem; margin-bottom:4px; }
+  input[type=number], select { width:100%; box-sizing:border-box; padding:9px 10px; border:1px solid var(--line); border-radius:8px; background:var(--bg); color:var(--fg); font-size:1rem; }
+  input:invalid { border-color: var(--bad); }
+  small.help { display:block; color:var(--muted); font-weight:400; margin-top:3px; }
+  .results { margin-top: 22px; display:grid; grid-template-columns: repeat(auto-fit, minmax(180px,1fr)); gap:12px; }
+  .tile { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:14px; }
+  .tile output { display:block; font-size:1.6rem; font-weight:700; }
+  .tile .l { color:var(--muted); font-size:.88rem; }
+  .verdict { margin-top:16px; padding:14px; border-radius:10px; border:1px solid var(--line); font-weight:600; }
+  .error { margin-top:16px; padding:12px 14px; border-radius:10px; border:1px solid var(--bad); color: var(--bad); font-weight:600; }
+  .ok { color:var(--ok);} .warn{ color:var(--warn);} .bad{ color:var(--bad);}
+  table { width:100%; border-collapse: collapse; font-size:.93rem; }
+  th, td { text-align:left; padding:8px 6px; border-bottom:1px solid var(--line); vertical-align: top; }
+  .wrap { overflow-x:auto; }
+  footer { margin-top: 36px; color: var(--muted); font-size: .88rem; }
+  .hidden { display:none; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Client-intake automation cost calculator</h1>
+  <p class="lead">Tally form to HubSpot contact and deal to Brevo acknowledgement, automated with Make, all on the free plans we tested (Tally Free, Make Free, HubSpot Free CRM, Brevo Free). Operation counts are measured in our test runs of 2026-08-16 and 2026-08-20. Prices and plan limits are vendor-sourced with the date we checked them. Defaults and thresholds are our own assumptions and are labeled as such.</p>
+
+  <div class="notice"><strong>Advertising notice:</strong> this page currently contains no advertising (affiliate) links. If we add any, each will be marked next to the link and this notice will be updated. Every recommendation here is based on our own documented testing.</div>
+
+  <p><strong>Who this is for:</strong> a solo consultant or small agency sizing this exact workflow. <strong>Who can skip it:</strong> if you only need a form that creates a CRM contact, HubSpot's own free form builder does that without Make (checked on 2026-08-18) and this calculator does not apply.</p>
+
+  <h2>Your numbers</h2>
+  <p class="lead">The preloaded values are illustrative defaults, not benchmarks.</p>
+  <div class="grid">
+    <div>
+      <label for="subs">Form submissions per month</label>
+      <input id="subs" type="number" min="0" step="1" value="40" aria-describedby="subs-help" required>
+      <small class="help" id="subs-help">Whole number. Everything that hits the form, including repeats.</small>
+    </div>
+    <div>
+      <label for="dup">Share that are duplicates (%)</label>
+      <input id="dup" type="number" min="0" max="100" step="1" value="10" aria-describedby="dup-help" required>
+      <small class="help" id="dup-help">Same email submitting again, taking the 3-credit update path.</small>
+    </div>
+    <div>
+      <label for="err">Share of new leads where the association step fails (%)</label>
+      <input id="err" type="number" min="0" max="100" step="1" value="2" aria-describedby="err-help" required>
+      <small class="help" id="err-help">v2 only. Modeled as the full chain plus one alert email (7 credits). Other handled failures we observed cost less, so this is conservative.</small>
+    </div>
+    <div>
+      <label for="ver">Workflow version</label>
+      <select id="ver" aria-describedby="ver-help">
+        <option value="v2" selected>v2: with error handlers (tested 2026-08-20, each case once)</option>
+        <option value="v1">v1: no error handlers (tested 2026-08-16, two rounds)</option>
+      </select>
+      <small class="help" id="ver-help">In our v1 tests, both unhandled errors we provoked (a failed association call, a duplicate-create rejection) deactivated the scenario.</small>
+    </div>
+  </div>
+
+  <noscript><p class="error">This calculator needs JavaScript to run. Nothing is sent anywhere; it runs in your browser.</p></noscript>
+  <div id="errbox" class="error hidden" role="alert"></div>
+  <div id="resultsWrap" class="hidden">
+    <div class="results" role="status" aria-live="polite" aria-atomic="true">
+      <div class="tile"><output id="credits" for="subs dup err ver">0</output><div class="l">Make credits per month (rounded up)</div></div>
+      <div class="tile"><output id="util" for="subs dup err ver">0%</output><div class="l">of Make Free's 1,000 credits</div></div>
+      <div class="tile"><output id="maxfree" for="dup err ver">0</output><div class="l">max submissions per month on Make Free at this mix</div></div>
+      <div class="tile"><output id="cost" for="subs dup err ver">$0</output><div class="l">estimated Make plan cost per month</div></div>
+    </div>
+    <div class="verdict" id="verdict" role="status" aria-live="polite"></div>
+  </div>
+
+  <h2>Where the numbers come from</h2>
+  <div class="wrap">
+  <table>
+    <thead><tr><th>Item</th><th>Value</th><th>How we know</th></tr></thead>
+    <tbody>
+      <tr><td>New lead, full chain</td><td>6 credits</td><td>Measured in every healthy run (v1 on 2026-08-16, v2 on 2026-08-20)</td></tr>
+      <tr><td>Duplicate submission, update path</td><td>3 credits</td><td>Measured in v1 (case L003, 2026-08-16). v2 leaves those modules unchanged; the v2 value is an inference, not a new measurement</td></tr>
+      <tr><td>Handled association failure</td><td>7 credits (6 + 1 alert)</td><td>Measured once in v2 (case T2, 2026-08-20). A handled duplicate-create failure measured 4 credits (case T3b); the calculator uses the higher figure</td></tr>
+      <tr><td>Make Free</td><td>$0, 1,000 credits/month, 7-day execution log retention</td><td>make.com/en/pricing, checked on 2026-08-20</td></tr>
+      <tr><td>Make Core</td><td>$9/month on monthly billing, 10,000 credits/month, 30-day log retention</td><td>make.com/en/pricing, checked on 2026-08-20. Annual billing is discounted; not modeled</td></tr>
+      <tr><td>Brevo Free</td><td>$0, 300 emails/day</td><td>Limit shown at signup, checked on 2026-08-06. Re-check before relying on it</td></tr>
+      <tr><td>Tally Free, HubSpot Free CRM</td><td>$0</td><td>Plans used in testing, free at signup, checked on 2026-08-05 (Tally) and 2026-08-05 (HubSpot). Not a binding constraint at the volumes tested</td></tr>
+      <tr><td>80% "close to the cap" threshold, 30-day month for the Brevo average</td><td>assumptions</td><td>Our choices, not measurements</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h2>What this calculator does not know</h2>
+  <p>It assumes one acknowledgement email per new lead, one alert email per handled failure, and no other scenarios on the same Make account. The Brevo check is a 30-day average and cannot tell you about a busy day. It does not model Make credit add-ons, annual discounts, HubSpot paid tiers, or your time. Every v2 figure comes from a single observation per case. In v2, a handled association failure leaves the deal unlinked to the contact, and a handled duplicate drops the newer submission's data instead of merging it. Prices and limits change; the dates above say when we last looked.</p>
+
+  <footer>
+    Part of the Workflow Test Lab evidence packs client-intake-v1 and client-intake-v2. No data leaves this page; the calculator runs entirely in your browser.
+  </footer>
+</main>
+<script>
+(function () {
+  const NEW_CREDITS = 6, DUP_CREDITS = 3, ALERT_CREDITS = 1;
+  const FREE_CREDITS = 1000, CORE_CREDITS = 10000, CORE_PRICE = 9;
+  const BREVO_DAILY = 300, CLOSE_TO_CAP = 0.8, DAYS = 30;
+  const $ = (id) => document.getElementById(id);
+  const fmt = (n) => n.toLocaleString('en-US');
+
+  function readInputs() {
+    const subsEl = $('subs'), dupEl = $('dup'), errEl = $('err');
+    const problems = [];
+    const subs = subsEl.valueAsNumber, dup = dupEl.valueAsNumber, err = errEl.valueAsNumber;
+    if (!Number.isFinite(subs) || subs < 0 || !Number.isInteger(subs)) problems.push('Submissions must be a whole number of 0 or more.');
+    if (!Number.isFinite(dup) || dup < 0 || dup > 100) problems.push('Duplicate share must be between 0 and 100.');
+    if (!Number.isFinite(err) || err < 0 || err > 100) problems.push('Failure share must be between 0 and 100.');
+    return { subs, dup, err, v2: $('ver').value === 'v2', problems };
+  }
+
+  function calc() {
+    const i = readInputs();
+    const errbox = $('errbox'), wrap = $('resultsWrap');
+    if (i.problems.length) { errbox.textContent = i.problems.join(' '); errbox.classList.remove('hidden'); wrap.classList.add('hidden'); return; }
+    errbox.classList.add('hidden'); wrap.classList.remove('hidden');
+
+    const d = i.dup / 100, e = i.v2 ? i.err / 100 : 0;
+    const perSub = (1 - d) * NEW_CREDITS + d * DUP_CREDITS + (1 - d) * e * ALERT_CREDITS;
+    const rawCredits = i.subs * perSub;
+    const credits = Math.ceil(rawCredits);             // billed credits are whole; round up and classify on the same number
+    const util = credits / FREE_CREDITS * 100;
+    const maxFree = perSub > 0 ? Math.floor(FREE_CREDITS / perSub) : 0;
+    const news = i.subs * (1 - d), alerts = news * e;
+    const emailsPerDay = (news + alerts) / DAYS;
+
+    let plan, costText, cls, msg;
+    if (credits <= FREE_CREDITS) {
+      plan = 'Make Free'; costText = '$0';
+      if (credits <= FREE_CREDITS * CLOSE_TO_CAP) { cls = 'ok'; msg = 'Fits Make Free at ' + Math.round(util) + '% of 1,000 credits.'; }
+      else { cls = 'warn'; msg = 'Fits Make Free but close to the cap (' + Math.round(util) + '%). A busier month or a burst of resubmissions could cross it.'; }
+    } else if (credits <= CORE_CREDITS) {
+      plan = 'Make Core'; costText = '$9'; cls = 'warn';
+      msg = 'Exceeds Make Free (' + fmt(credits) + ' credits). Make Core at $9/month on monthly billing (checked on 2026-08-20) covers up to 10,000 credits.';
+    } else {
+      plan = 'outside tested range'; costText = 'outside tested range'; cls = 'bad';
+      msg = 'Exceeds Make Core base credits (10,000). This is outside what we tested; check Make pricing directly.';
+    }
+    if (emailsPerDay > BREVO_DAILY) { cls = 'bad'; msg += ' On a 30-day average this also exceeds Brevo Free (300 emails/day, checked on 2026-08-06), counting acknowledgements and alerts.'; }
+    else if (news + alerts > 0) { msg += ' Brevo Free (300 emails/day) is not exceeded on a 30-day average; this check cannot see busy days.'; }
+    if (!i.v2) { msg += ' v1 has no error handling; in our tests both unhandled errors we provoked deactivated the scenario (2026-08-16).'; }
+
+    $('credits').textContent = fmt(credits);
+    $('util').textContent = Math.round(util) + '%';
+    $('maxfree').textContent = fmt(maxFree);
+    $('cost').textContent = costText;
+    const v = $('verdict'); v.textContent = msg + ' Plan: ' + plan + '.'; v.className = 'verdict ' + cls;
+  }
+  ['subs','dup','err','ver'].forEach(id => { $(id).addEventListener('input', calc); $(id).addEventListener('change', calc); });
+  calc();
+})();
+</script>
+</body>
+</html>

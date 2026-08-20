@@ -1,0 +1,639 @@
+{
+ "flow": [
+  {
+   "id": 2,
+   "mapper": {},
+   "module": "tally:watchNewResponse",
+   "version": 1,
+   "metadata": {
+    "restore": {
+     "parameters": {
+      "__IMTHOOK__": {
+       "data": {
+        "editable": "false"
+       },
+       "label": "Your Tally webhook"
+      }
+     }
+    },
+    "designer": {
+     "x": 0,
+     "y": 150
+    },
+    "parameters": [
+     {
+      "name": "__IMTHOOK__",
+      "type": "hook:tally",
+      "label": "Webhook",
+      "required": true
+     }
+    ]
+   },
+   "parameters": {
+    "__IMTHOOK__": 3503903
+   }
+  },
+  {
+   "id": 3,
+   "mapper": {
+    "limit": "1",
+    "query": "",
+    "direction": "DESCENDING",
+    "parseCustomFields": true,
+    "filter": [
+     [
+      {
+       "a": "email",
+       "o": "EQ",
+       "b": "{{2.fieldsById.question_7vj5DL}}"
+      }
+     ]
+    ]
+   },
+   "module": "hubspotcrm:SearchContacts",
+   "version": 2,
+   "metadata": {
+    "restore": {
+     "expect": {
+      "direction": {
+       "label": "Descending"
+      },
+      "propertyName": {
+       "mode": "chose"
+      },
+      "outputProperties": {
+       "mode": "chose"
+      },
+      "parseCustomFields": {
+       "mode": "chose"
+      }
+     },
+     "parameters": {
+      "__IMTCONN__": {
+       "data": {
+        "scoped": "true",
+        "connection": "hubspotcrm"
+       },
+       "label": "Your HubSpot CRM connection"
+      }
+     }
+    },
+    "advanced": true,
+    "designer": {
+     "x": 300,
+     "y": 150
+    },
+    "parameters": [
+     {
+      "name": "__IMTCONN__",
+      "type": "account:hubspotcrm",
+      "label": "Connection",
+      "required": true
+     }
+    ]
+   },
+   "parameters": {
+    "__IMTCONN__": 9564051
+   }
+  },
+  {
+   "id": 4,
+   "mapper": null,
+   "module": "builtin:BasicRouter",
+   "routes": [
+    {
+     "flow": [
+      {
+       "id": 5,
+       "filter": {
+        "name": "New lead",
+        "conditions": [
+         [
+          {
+           "a": "{{3.id}}",
+           "o": "notexist"
+          }
+         ]
+        ]
+       },
+       "mapper": {
+        "_method": "compact",
+        "properties": [
+         {
+          "key": "email",
+          "value": "{{2.fieldsById.question_7vj5DL}}"
+         },
+         {
+          "key": "firstname",
+          "value": "{{2.fieldsById.question_6v45ke}}"
+         },
+         {
+          "key": "company",
+          "value": "{{2.fieldsById.question_brgGke}}"
+         }
+        ],
+        "parseCustomFields": true
+       },
+       "module": "hubspotcrm:createContact",
+       "version": 2,
+       "metadata": {
+        "restore": {
+         "expect": {
+          "_method": {
+           "mode": "chose",
+           "label": "Compact"
+          },
+          "properties": {
+           "mode": "chose",
+           "items": [
+            {
+             "key": {
+              "mode": "chose",
+              "label": "Email"
+             }
+            },
+            {
+             "key": {
+              "mode": "chose",
+              "label": "First Name"
+             }
+            },
+            {
+             "key": {
+              "mode": "chose",
+              "label": "Company Name"
+             }
+            }
+           ]
+          },
+          "parseCustomFields": {
+           "mode": "chose"
+          }
+         },
+         "parameters": {
+          "__IMTCONN__": {
+           "data": {
+            "scoped": "true",
+            "connection": "hubspotcrm"
+           },
+           "label": "Your HubSpot CRM connection"
+          }
+         }
+        },
+        "designer": {
+         "x": 900,
+         "y": 0
+        },
+        "parameters": [
+         {
+          "name": "__IMTCONN__",
+          "type": "account:hubspotcrm",
+          "label": "Connection",
+          "required": true
+         }
+        ]
+       },
+       "parameters": {
+        "__IMTCONN__": 9564051
+       },
+       "onerror": [
+        {
+         "id": 22,
+         "module": "sendinblue:SendEmail",
+         "version": 2,
+         "parameters": {
+          "__IMTCONN__": 9840364
+         },
+         "mapper": {
+          "to": [
+           {
+            "email": "you@example.com"
+           }
+          ],
+          "sender": {
+           "name": "Your Company",
+           "email": "sender@example.com"
+          },
+          "replyTo": {
+           "name": "Your Company",
+           "email": "sender@example.com"
+          },
+          "subject": "ALERT client-intake: create contact (module 5) failed for {{2.fieldsById.question_7vj5DL}}",
+          "textContent": "The client-intake scenario hit an error at step: create contact (module 5).\r\nLead: {{2.fieldsById.question_6v45ke}} <{{2.fieldsById.question_7vj5DL}}>\r\nThe error was handled so the scenario stays active. Check the Make run history within 7 days for details."
+         },
+         "metadata": {
+          "designer": {
+           "x": 900,
+           "y": 300
+          }
+         }
+        },
+        {
+         "id": 23,
+         "module": "builtin:Ignore",
+         "version": 1,
+         "metadata": {
+          "designer": {
+           "x": 1200,
+           "y": 300
+          }
+         }
+        }
+       ]
+      },
+      {
+       "id": 7,
+       "mapper": {
+        "_method": "compact",
+        "properties": [
+         {
+          "key": "dealname",
+          "value": "{{2.fieldsById.question_6v45ke}}- Client intake"
+         },
+         {
+          "key": "dealstage",
+          "value": "appointmentscheduled"
+         },
+         {
+          "key": "pipeline",
+          "value": "default"
+         }
+        ],
+        "parseCustomFields": true
+       },
+       "module": "hubspotcrm:createDeal",
+       "version": 2,
+       "metadata": {
+        "restore": {
+         "expect": {
+          "_method": {
+           "mode": "chose",
+           "label": "Compact"
+          },
+          "properties": {
+           "mode": "chose",
+           "items": [
+            {
+             "key": {
+              "mode": "chose",
+              "label": "Deal Name"
+             }
+            },
+            {
+             "key": {
+              "mode": "chose",
+              "label": "Deal Stage"
+             }
+            },
+            {
+             "key": {
+              "mode": "chose",
+              "label": "Pipeline"
+             }
+            }
+           ]
+          },
+          "parseCustomFields": {
+           "mode": "chose"
+          }
+         },
+         "parameters": {
+          "__IMTCONN__": {
+           "data": {
+            "scoped": "true",
+            "connection": "hubspotcrm"
+           },
+           "label": "Your HubSpot CRM connection"
+          }
+         }
+        },
+        "designer": {
+         "x": 1200,
+         "y": 0
+        },
+        "parameters": [
+         {
+          "name": "__IMTCONN__",
+          "type": "account:hubspotcrm",
+          "label": "Connection",
+          "required": true
+         }
+        ]
+       },
+       "parameters": {
+        "__IMTCONN__": 9564051
+       }
+      },
+      {
+       "id": 12,
+       "mapper": {
+        "url": "/crm/v3/objects/deals/{{7.id}}/associations/contacts/{{5.id}}/deal_to_contact",
+        "method": "PUT",
+        "headers": [
+         {
+          "key": "Content-Type",
+          "value": "application/json"
+         }
+        ]
+       },
+       "module": "hubspotcrm:MakeAPICall",
+       "version": 2,
+       "metadata": {
+        "restore": {
+         "expect": {
+          "qs": {
+           "mode": "chose"
+          },
+          "method": {
+           "mode": "chose",
+           "label": "PUT"
+          },
+          "headers": {
+           "mode": "chose",
+           "items": [
+            null
+           ]
+          }
+         },
+         "parameters": {
+          "__IMTCONN__": {
+           "data": {
+            "scoped": "true",
+            "connection": "hubspotcrm"
+           },
+           "label": "Your HubSpot CRM connection"
+          }
+         }
+        },
+        "designer": {
+         "x": 1500,
+         "y": 0
+        },
+        "parameters": [
+         {
+          "name": "__IMTCONN__",
+          "type": "account:hubspotcrm",
+          "label": "Connection",
+          "required": true
+         }
+        ]
+       },
+       "parameters": {
+        "__IMTCONN__": 9564051
+       },
+       "onerror": [
+        {
+         "id": 20,
+         "module": "sendinblue:SendEmail",
+         "version": 2,
+         "parameters": {
+          "__IMTCONN__": 9840364
+         },
+         "mapper": {
+          "to": [
+           {
+            "email": "you@example.com"
+           }
+          ],
+          "sender": {
+           "name": "Your Company",
+           "email": "sender@example.com"
+          },
+          "replyTo": {
+           "name": "Your Company",
+           "email": "sender@example.com"
+          },
+          "subject": "ALERT client-intake: deal-contact association (module 12) failed for {{2.fieldsById.question_7vj5DL}}",
+          "textContent": "The client-intake scenario hit an error at step: deal-contact association (module 12).\r\nLead: {{2.fieldsById.question_6v45ke}} <{{2.fieldsById.question_7vj5DL}}>\r\nThe error was handled so the scenario stays active. Check the Make run history within 7 days for details."
+         },
+         "metadata": {
+          "designer": {
+           "x": 1500,
+           "y": 300
+          }
+         }
+        },
+        {
+         "id": 21,
+         "module": "builtin:Resume",
+         "version": 1,
+         "mapper": {},
+         "metadata": {
+          "designer": {
+           "x": 1800,
+           "y": 300
+          }
+         }
+        }
+       ]
+      },
+      {
+       "id": 13,
+       "mapper": {
+        "to": [
+         {
+          "email": "{{2.fieldsById.question_7vj5DL}}"
+         }
+        ],
+        "sender": {
+         "name": "Your Company",
+         "email": "sender@example.com"
+        },
+        "replyTo": {
+         "name": "Your Company",
+         "email": "sender@example.com"
+        },
+        "subject": "We received your request - Your Company",
+        "textContent": "Hi {{2.fieldsById.question_6v45ke}}, Thanks for reaching out! We received your request and will get back to you within one business day.\r\n\r\nIf you have anything to add in the meantime, just reply to this email.\r\n\r\nBest regards,\r\nYour Company"
+       },
+       "module": "sendinblue:SendEmail",
+       "version": 2,
+       "metadata": {
+        "restore": {
+         "expect": {
+          "cc": {
+           "mode": "chose"
+          },
+          "to": {
+           "mode": "chose",
+           "items": [
+            null
+           ]
+          },
+          "bcc": {
+           "mode": "chose"
+          },
+          "tags": {
+           "mode": "chose"
+          },
+          "params": {
+           "mode": "chose"
+          },
+          "headers": {
+           "mode": "chose"
+          },
+          "attachment": {
+           "mode": "chose"
+          },
+          "templateId": {
+           "mode": "chose"
+          }
+         },
+         "parameters": {
+          "__IMTCONN__": {
+           "data": {
+            "scoped": "true",
+            "connection": "sendinblue2"
+           },
+           "label": "Your Brevo connection"
+          }
+         }
+        },
+        "advanced": true,
+        "designer": {
+         "x": 1800,
+         "y": 0
+        },
+        "parameters": [
+         {
+          "name": "__IMTCONN__",
+          "type": "account:sendinblue2",
+          "label": "Connection",
+          "required": true
+         }
+        ]
+       },
+       "parameters": {
+        "__IMTCONN__": 9840364
+       }
+      }
+     ]
+    },
+    {
+     "flow": [
+      {
+       "id": 6,
+       "filter": {
+        "name": "Existing contacts",
+        "conditions": [
+         [
+          {
+           "a": "{{3.id}}",
+           "o": "exist"
+          }
+         ]
+        ]
+       },
+       "mapper": {
+        "_method": "compact",
+        "contactId": "{{3.id}}",
+        "properties": [
+         {
+          "key": "firstname",
+          "value": "{{2.fieldsById.question_6v45ke}}"
+         },
+         {
+          "key": "company",
+          "value": "{{2.fieldsById.question_brgGke}}"
+         }
+        ],
+        "parseCustomFields": true
+       },
+       "module": "hubspotcrm:updateContact",
+       "version": 2,
+       "metadata": {
+        "restore": {
+         "expect": {
+          "_method": {
+           "mode": "chose",
+           "label": "Compact"
+          },
+          "properties": {
+           "mode": "chose",
+           "items": [
+            {
+             "key": {
+              "mode": "chose",
+              "label": "First Name"
+             }
+            },
+            {
+             "key": {
+              "mode": "chose",
+              "label": "Company Name"
+             }
+            }
+           ]
+          },
+          "parseCustomFields": {
+           "mode": "chose"
+          }
+         },
+         "parameters": {
+          "__IMTCONN__": {
+           "data": {
+            "scoped": "true",
+            "connection": "hubspotcrm"
+           },
+           "label": "Your HubSpot CRM connection"
+          }
+         }
+        },
+        "designer": {
+         "x": 900,
+         "y": 300
+        },
+        "parameters": [
+         {
+          "name": "__IMTCONN__",
+          "type": "account:hubspotcrm",
+          "label": "Connection",
+          "required": true
+         }
+        ]
+       },
+       "parameters": {
+        "__IMTCONN__": 9564051
+       }
+      }
+     ]
+    }
+   ],
+   "version": 1,
+   "metadata": {
+    "designer": {
+     "x": 600,
+     "y": 150
+    }
+   }
+  }
+ ],
+ "name": "Integration Tally",
+ "metadata": {
+  "instant": true,
+  "version": 1,
+  "designer": {
+   "orphans": []
+  },
+  "scenario": {
+   "dlq": false,
+   "slots": null,
+   "dataloss": false,
+   "maxErrors": 3,
+   "autoCommit": true,
+   "roundtrips": 1,
+   "sequential": false,
+   "confidential": false,
+   "freshVariables": false,
+   "autoCommitTriggerLast": true
+  }
+ },
+ "scheduling": {
+  "type": "immediately",
+  "maximum_runs_per_minute": 100
+ },
+ "interface": {
+  "input": [],
+  "output": []
+ }
+}

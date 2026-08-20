@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What breaks in a no-code client-intake automation: 7 failure modes we observed, and the fixes we tested | Workflow Test Lab</title><meta name="description" content="What breaks in a no-code client-intake automation: 7 failure modes we observed, and the fixes we tested (tested 2026-08-16)">
+<meta name='impact-site-verification' value='68243723-46ca-4e30-aaf0-d4f93802c4c2'>
+<style>
+:root{--bg:#fff;--fg:#1c1c1c;--muted:#5a5a5a;--line:#8a8a8a;--accent:#1f5fbf;--card:#f4f4f4}
+@media (prefers-color-scheme:dark){:root{--bg:#121212;--fg:#ececec;--muted:#b0b0b0;--line:#7a7a7a;--accent:#7fb0ff;--card:#1c1c1c}}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--fg);line-height:1.6}
+header{border-bottom:1px solid var(--line)} .wrap{max-width:820px;margin:0 auto;padding:0 20px}
+header .wrap{display:flex;flex-wrap:wrap;gap:10px 24px;align-items:baseline;padding:14px 20px}
+header a.brand{font-weight:700;text-decoration:none;color:var(--fg)} nav a{margin-right:14px;color:var(--accent);text-decoration:none;font-size:.95rem}
+main.wrap{padding:28px 20px 56px} h1{font-size:1.7rem;line-height:1.25} h2{font-size:1.2rem;margin-top:28px}
+blockquote{border-left:4px solid var(--accent);margin:16px 0;padding:8px 14px;background:var(--card);font-size:.93rem}
+table{border-collapse:collapse;width:100%;font-size:.93rem;display:block;overflow-x:auto} th,td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--line);vertical-align:top}
+code{background:var(--card);padding:1px 5px;border-radius:4px;font-size:.92em} img{max-width:100%;height:auto;border:1px solid var(--line);border-radius:6px}
+footer{border-top:1px solid var(--line);color:var(--muted);font-size:.85rem} footer .wrap{padding:18px 20px 40px}
+.meta{color:var(--muted);font-size:.9rem} .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.card{border:1px solid var(--line);border-radius:10px;padding:14px;background:var(--card)} .card a{color:var(--accent);text-decoration:none;font-weight:600}
+.preview-banner{background:#ffe9b3;color:#4a3300;padding:8px 14px;font-weight:600;text-align:center}
+</style></head><body>
+<header><div class="wrap"><a class="brand" href="/">Workflow Test Lab</a><nav><a href="/">Home</a><a href="/intake-workflow-template/">Template</a><a href="/tested-client-intake-workflow/">Tested workflow</a><a href="/what-breaks-client-intake/">What breaks</a><a href="/who-should-not-use-this-stack/">Who should skip it</a><a href="/tools/intake-cost-calculator.html">Cost calculator</a></nav></div></header>
+<main class="wrap"><blockquote>
+<p><strong>Advertising disclosure:</strong> This page may contain advertising (affiliate) links, marked
+next to each link. If you buy through them, we may earn a commission at no extra cost to
+you. Every recommendation is based on our own documented testing; test dates and evidence
+are shown on this page. (As of this draft we have no active affiliate partnerships; any
+product links are plain links until noted otherwise.)</p>
+</blockquote>
+<h1>What breaks in a no-code client-intake automation: 7 failure modes we observed, and the fixes we tested</h1>
+<p><strong>Tested 2026-08-16 on the free tiers of Tally, Make, HubSpot and Brevo.</strong> Our
+<a href="/tested-client-intake-workflow/">client-intake workflow</a> completed both of its formal lab
+runs. This page is about the ways it stopped working during those runs, on purpose and by
+accident. Every mode below was observed first-hand. For each we say how we saw it, what it
+meant in our test, and whether the fix is tested (three are, as of 2026-08-20) or not.</p>
+<p><strong>Who this page is for:</strong> anyone about to connect a no-code intake workflow to real leads
+and wondering how it fails. <strong>Who can skip it:</strong> if you capture leads with HubSpot's own
+free form builder and no automation layer (checked 2026-08-18), most of these modes do not
+apply to you; that is also the simplest non-affiliate alternative to this whole stack.</p>
+<h2>1. A failed step can look complete inside HubSpot</h2>
+<p><strong>What happened.</strong> We broke one step on purpose (the call that links a deal to its contact)
+and submitted a lead. The contact was created. The deal was created. Then the run stopped:
+the deal stayed unlinked and the acknowledgement email was never sent. Same result both
+times we ran it, with identical HubSpot 400 responses.</p>
+<p><strong>What it meant.</strong> Make reported the error in its run history (and see mode 2), but the
+contact and deal lists in HubSpot looked normal. The two missing pieces, the deal link and
+the reply, are not visible at a glance in the CRM.</p>
+<p><strong>Tested fix (2026-08-20).</strong> We attached an error-handler route to the association step:
+an alert email to the operator, then Make's Resume directive so the run continues. Re-ran
+the same broken call: the run ended as Success, the lead still received the acknowledgement,
+we received the alert naming the lead and the failed step, and the scenario stayed active.
+The deal is still left unlinked; the alert is what tells you to fix it. (Make documents five
+handler directives: Skip, Retry, Resume, Commit, Rollback; Rollback is the default when no
+handler is attached, checked 2026-08-20.) Observed once so far.</p>
+<h2>2. One error switched our webhook scenario off</h2>
+<p><strong>What happened.</strong> After each forced failure, the run history showed: "Scenario was
+deactivated by Make because: scenario has encountered an error." The scenario was off.</p>
+<p><strong>What it meant.</strong> This is documented behaviour (checked 2026-08-20): webhook-triggered
+scenarios are disabled immediately on an error; scheduled scenarios are disabled after
+three consecutive errors. In our test one invalid API call was enough. We did not test
+other error causes.</p>
+<p><strong>Tested fix (2026-08-20).</strong> With handler routes attached (mode 1 and mode 4), two
+deliberately provoked errors ended as handled runs: the scenario's error counter did not
+move and no deactivation event appeared. A manual check of the on/off state remains
+sensible; we have not tested what frequency that would need in real use.</p>
+<h2>3. When we switched it back on, the backlog ran at once</h2>
+<p><strong>What happened.</strong> Three round-two lead cases, plus one healthy failure-case submission,
+were queued while the scenario was off. On reactivation, four executions ran within about
+one second of each other.</p>
+<p><strong>What it meant.</strong> In this test the queued submissions were not lost. That burst is what
+exposed mode 4.</p>
+<p><strong>Mitigation status.</strong> Untested. In our test, reading the run history after reactivation
+is how we found the failed execution.</p>
+<h2>4. Duplicate protection has a race window</h2>
+<p><strong>What happened.</strong> Our dedupe logic searches HubSpot for the email first and only creates
+a contact when nothing is found. In the 25-second-spaced formal run, the later duplicate
+was handled correctly (short update path, no second contact, deal, or email). During the
+reactivation burst, a duplicate arrived during the roughly one-second queue drain. The
+search returned nothing, the create ran, and HubSpot's email-uniqueness rule rejected it
+with a 400 error, which triggered mode 2.</p>
+<p><strong>What it meant.</strong> Search-then-create is not atomic. We observed this during a queue
+burst; double-clicks and retries are plausible additional causes that we did not test.</p>
+<p><strong>Tested fix (2026-08-20).</strong> We switched the search from a free-text query to an exact
+email filter, then attached a handler (alert email + Ignore directive) to the contact-creation
+step and submitted the same new address twice, 29 milliseconds apart. The race still happened
+(it is HubSpot index lag, not the filter), but the outcome changed: one contact, one deal, one
+acknowledgement, one alert to us, run ended as Success, scenario stayed active. Trade-off: the
+duplicate submission's data is dropped rather than merged into the existing contact. Observed
+once. An email-keyed create-or-update path remains unverified.</p>
+<h2>5. The audit trail on the free plan lasts 7 days</h2>
+<p><strong>What happened.</strong> We read the account limits through Make's API on 2026-08-20: the free
+plan's license lists a 7-day retention, at most 2 scenarios, and 1,000 credits per month
+(simple operations consumed 1 credit each in our runs). In our account, run list entries
+older than 7 days were still listed but marked not replayable; we could not retrieve
+per-module detail through the API for any run, so we cannot say exactly what the 7 days
+covers beyond what the license states.</p>
+<p><strong>What it meant.</strong> Do not count on reconstructing a two-week-old run from Make's logs.</p>
+<p><strong>Mitigation status.</strong> Observed practice: we captured screenshots of failed runs on the test
+day. Exporting run details and paid-plan retention terms are untested and unsourced here.</p>
+<h2>6. "Run once" does not save your work</h2>
+<p><strong>What happened.</strong> We built two modules, tested them with "Run once", closed the browser,
+and they were gone. Run once executes the current editor state; it does not persist it.</p>
+<p><strong>What it meant.</strong> We rebuilt both modules from our notes in about ten minutes.</p>
+<p><strong>Mitigation status.</strong> Observed: saving explicitly before leaving the editor prevented a
+repeat for the rest of the build.</p>
+<h2>7. Two things the module list did not tell us</h2>
+<ul>
+<li><strong>The two personal-Gmail connection methods we tried were refused.</strong> Make rejected a
+  personal @gmail.com sender on plain SMTP and on its restricted Google OAuth path. Make
+  points to a custom Google Cloud OAuth setup as the remaining route; we did not test it.
+  We used a transactional service (Brevo, free tier, checked 2026-08-16) instead; its
+  emails reached the Gmail inbox, not spam, in both rounds. Other mail providers untested.</li>
+<li><strong>Our deal was created unlinked to its contact.</strong> The compact Create a Deal
+  configuration we used exposed no association field, and the deal we checked showed
+  "Contacts (0)". <strong>Tested fix:</strong> one raw HubSpot API call that links deal to contact; it
+  is included in the exported scenario blueprint in our evidence pack.</li>
+</ul>
+<h2>Before trusting real leads</h2>
+<p>Tested by us (each observed at least once, dates shown):</p>
+<ul>
+<li>Error-handler routes with an alert email on the contact-creation and association steps
+  (2026-08-20): handled errors no longer deactivate the scenario, the operator is told, and
+  the lead still gets acknowledged when the association step is the one that fails.</li>
+<li>Exact email filter in the CRM search instead of free-text query (2026-08-20).</li>
+<li>Saving the scenario explicitly after every edit (prevented a repeat of the module loss).</li>
+</ul>
+<p>Not validated as mitigations by us:</p>
+<ul>
+<li>A periodic check of the scenario's on/off state (frequency unknown).</li>
+<li>Reading the run history after any reactivation (what we did; not tested as a routine).</li>
+<li>Capturing failed-run details within the 7-day retention window (limit checked 2026-08-20).</li>
+<li>A spare test submission to verify the chain after changes.</li>
+</ul>
+<h2>What we have not tested</h2>
+<p>Any upsert-based dedupe, paid-plan retention, expired connections or vendor API changes as
+error causes, other mail providers, sending from an authenticated custom domain, and the
+handler fixes beyond a single observation each. When we test them, this page changes.</p>
+<hr />
+<p><em>Evidence packs: client-intake-v1 (tested 2026-08-16, two rounds, two forced failures) and
+client-intake-v2 (tested 2026-08-20, error handling, verified through Make and Gmail APIs).
+Material statements map to this page's claim ledger; inferences and untested options are
+labeled as such.</em></p></main>
+<footer><div class="wrap"><p>Workflow Test Lab. Every recommendation on this site is based on our own documented testing; each page names its test date, the plans used, and its evidence pack. Pages that contain advertising (affiliate) links say so at the top and mark each such link next to the link.</p>
+<p>No tracking cookies, no analytics scripts, no third-party embeds. The cost calculator runs entirely in your browser. Operated from Finland. &copy; 2026</p></div></footer>
+</body></html>
