@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Home | Workflow Test Lab</title><meta name="description" content="">
+<title>About Workflow Test Lab: who runs it, how we test, and how the site makes money | Workflow Test Lab</title><meta name="description" content="About Workflow Test Lab: who runs it, how we test, and how the site makes money (tested 2026-08-21)">
 <meta name='impact-site-verification' value='68243723-46ca-4e30-aaf0-d4f93802c4c2'>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231d5bbf'/%3E%3Ctext x='16' y='22' font-family='system-ui,sans-serif' font-size='18' font-weight='800' text-anchor='middle' fill='white'%3EW%3C/text%3E%3C/svg%3E">
 <style>
@@ -68,7 +68,67 @@ footer .wrap{padding:22px 22px 48px} footer p{max-width:none}
 @media print{header nav,footer{display:none} body{font-size:12pt} .runlog .row{animation:none;opacity:1}}
 </style></head><body>
 <header><div class="wrap"><a class="brand" href="/">Workflow Test <span>Lab</span></a><nav><a href="/">Home</a><a href="/tested-client-intake-workflow/">Tested workflow</a><a href="/what-breaks-client-intake/">What breaks</a><a href="/intake-workflow-template/">Template</a><a href="/who-should-not-use-this-stack/">Who should skip it</a><a href="/tools/intake-cost-calculator.html">Cost calculator</a></nav><div class="tag">real accounts / measured in operations / broken on purpose / published with evidence</div></div></header>
-<main class="wrap"><h1>Automation workflows, tested before recommended</h1><p class="lead">We build small-business automation workflows on real accounts, run them, break them on purpose, and publish what happened: operation counts, failure modes, costs, and the exported scenario.</p><div class="runlog" aria-label="Measured results from our test runs"><div class="head"><span>run record</span><span>client-intake v1 + v2 / 2026-08-16 and 2026-08-20</span></div><div class="row"><span>2026-08-16 00:50</span><span class="what">New lead: form to contact, deal, link, acknowledgement</span><span class="n">6 ops</span><span class="st ok">success</span></div><div class="row"><span>2026-08-16 00:51</span><span class="what">Same lead again: update path, no second email</span><span class="n">3 ops</span><span class="st ok">success</span></div><div class="row"><span>2026-08-16 22:15</span><span class="what">Broken association step, no handler: scenario deactivated</span><span class="n">5 ops</span><span class="st warn">error</span></div><div class="row"><span>2026-08-20 21:33</span><span class="what">Broken association step, with handler: lead still acknowledged</span><span class="n">7 ops</span><span class="st ok">success</span></div><div class="row"><span>2026-08-20 21:35</span><span class="what">Duplicate 29 ms after original: caught, one alert, one email</span><span class="n">4 ops</span><span class="st ok">success</span></div></div><p class="meta">Current lab: client intake for solo consultants and small agencies, on the free plans of Tally, Make, HubSpot and Brevo. Every page below names its test date and evidence pack.</p><div class="cards"><div class="card"><span class="kind">Tested workflow</span><a href="/tested-client-intake-workflow/">Tally to HubSpot to follow-up: a tested client-intake workflow for solo consultants</a><span class="meta">Tested 2026-08-16</span></div><div class="card"><span class="kind">What breaks</span><a href="/what-breaks-client-intake/">What breaks in a no-code client-intake automation: 7 failure modes we observed, and the fixes we tested</a><span class="meta">Tested 2026-08-16</span></div><div class="card"><span class="kind">Template</span><a href="/intake-workflow-template/">The client-intake Make blueprint: download, import, and what to change before it runs</a><span class="meta">Tested 2026-08-21</span></div><div class="card"><span class="kind">Who should skip it</span><a href="/who-should-not-use-this-stack/">Who should not automate client intake with Tally, Make, HubSpot and Brevo</a><span class="meta">Tested 2026-08-20</span></div><div class="card"><span class="kind">Tool</span><a href="/tools/intake-cost-calculator.html">Client-intake cost calculator</a><span class="meta">Runs in your browser; numbers from our measured runs</span></div></div></main>
+<main class="wrap"><h1>About Workflow Test Lab: who runs it, how we test, and how the site makes money</h1><div class="strip"><span>site page</span><span>updated <b>2026-08-21</b></span></div>
+<p><strong>Updated 2026-08-21.</strong> This page describes the lab itself. Every other page on the site is
+about a workflow we tested; this one is about how those pages come to exist.</p>
+<h2>What the site is</h2>
+<p>Workflow Test Lab publishes small-business automation workflows that we have built, run, and
+deliberately broken on real accounts before recommending anything. The first subject is client
+intake for solo consultants and 1-5 person agencies: a form submission that becomes a CRM record
+and an acknowledgement email, on the free plans of Tally, Make, HubSpot and Brevo.</p>
+<p>Each published workflow comes with the same set of pages: the tested workflow itself, what broke
+and which fixes we tested, the exported scenario you can import, and who should not use the stack
+at all. The cost calculator is built from the same measurements.</p>
+<h2>Who runs it</h2>
+<p>The site is run by Tuomas Talka, an independent operator based in Finland. It is a small,
+one-person operation, not an agency or a software vendor, and it has no commercial relationship
+with any of the tools it tests beyond the affiliate programs listed on the
+<a href="/disclosure-and-privacy/">disclosure page</a>.</p>
+<p>We use AI tooling in the lab. Claude (Anthropic) builds and runs test scenarios, collects the API
+evidence, and drafts pages under Tuomas's direction. Before a page is queued for approval, a
+second AI model from a different vendor (OpenAI GPT) audits the draft against the evidence files
+and flags unsupported statements, which are then fixed; this step is written into our publishing
+rules. Tuomas reads the rendered page and approves it before it is published. The build system
+publishes only pages that have an approval file pinned to the approved version of the text; an
+edited page drops back to draft until it is approved again. We say this here because a site about
+testing things honestly should be honest about how it is made.</p>
+<h2>How we test</h2>
+<ul>
+<li><strong>Real accounts, real plans.</strong> Every workflow runs on accounts we created for the lab, on the
+  plan named on the page (free tiers so far). We do not test in sandboxes or from vendor demos.</li>
+<li><strong>Scripted cases, every observation counted.</strong> Each workflow gets a written test matrix (new lead,
+  duplicate, special characters, concurrent submissions, forced failures). The first workflow
+  was run in two full rounds on 2026-08-16; later changes were tested on 2026-08-20 and
+  2026-08-21. When something was observed only once, the page says "observed once".</li>
+<li><strong>Broken on purpose.</strong> We provoke failures (a wrong API path, a duplicate race, an invalid
+  field) to see what the tools do, and publish the failure modes before the fixes.</li>
+<li><strong>Machine-readable evidence.</strong> Results are verified through the tools' own APIs where
+  possible: execution IDs and operation counts from Make, records from HubSpot, message IDs from
+  the receiving inbox. Screenshots are kept for the form-submission steps.</li>
+<li><strong>Claim ledgers.</strong> Every material statement on a workflow, template, decision or tool page maps
+  to a ledger entry that names its support: observed in our test, taken from a dated vendor document, or an inference labelled as
+  such. Vendor facts carry a "checked on" date and a refresh date.</li>
+<li><strong>Limits stated on the page.</strong> What we did not test is listed on each page, not hidden in a
+  footnote.</li>
+</ul>
+<h2>What we do not do</h2>
+<p>We do not accept payment for placement, sponsored reviews, or vendor-supplied test results. We
+do not publish a recommendation before the workflow has passed its test matrix. We do not remove
+negative findings at a vendor's request; if a vendor disputes a finding, we re-test and publish
+the re-test.</p>
+<h2>How the site makes money</h2>
+<p>Through affiliate links, and only inside content that tested the product in question. Each page
+that carries such links says so at the top and marks each link next to the link. At the time of
+writing (2026-08-21) we have no active affiliate partnerships, so all product links are plain
+links. Where an application to a program is pending, no links are placed until it is approved.
+The <a href="/disclosure-and-privacy/">disclosure and privacy page</a> has the details.</p>
+<h2>Contact</h2>
+<p>Operator: Tuomas Talka, Finland. Email: hello@workflowtestlab.com. Corrections and re-test
+requests are welcome; tell us which page and which statement, and we will check it against the
+evidence and answer.</p>
+<hr />
+<p><em>Site built with a static generator from Markdown files; no cookies, no analytics, no third-party
+scripts. Hosted on GitHub Pages.</em></p></main>
 <footer><div class="wrap"><p>Workflow Test Lab. Every recommendation on this site is based on our own documented testing; each page names its test date, the plans used, and its evidence pack. Pages that contain advertising (affiliate) links say so at the top and mark each such link next to the link.</p>
 <p>No tracking cookies, no analytics scripts, no third-party embeds. The cost calculator runs entirely in your browser. Operated from Finland. &copy; 2026</p>
 <p><a href="/about/">About and methodology</a> &middot; <a href="/disclosure-and-privacy/">Advertising disclosure and privacy</a> &middot; Contact: hello@workflowtestlab.com</p></div></footer>
