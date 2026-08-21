@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Who should not automate client intake with Tally, Make, HubSpot and Brevo | Workflow Test Lab</title><meta name="description" content="Who should not automate client intake with Tally, Make, HubSpot and Brevo (tested 2026-08-20)">
+<title>Page not found | Workflow Test Lab</title><meta name="description" content="">
 <meta name='impact-site-verification' value='68243723-46ca-4e30-aaf0-d4f93802c4c2'>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231d5bbf'/%3E%3Ctext x='16' y='22' font-family='system-ui,sans-serif' font-size='18' font-weight='800' text-anchor='middle' fill='white'%3EW%3C/text%3E%3C/svg%3E">
 <style>
@@ -68,98 +68,7 @@ footer .wrap{padding:22px 22px 48px} footer p{max-width:none}
 @media print{header nav,footer{display:none} body{font-size:12pt} .runlog .row{animation:none;opacity:1}}
 </style></head><body>
 <header><div class="wrap"><a class="brand" href="/">Workflow Test <span>Lab</span></a><nav><a href="/">Home</a><a href="/tested-client-intake-workflow/">Tested workflow</a><a href="/what-breaks-client-intake/">What breaks</a><a href="/intake-workflow-template/">Template</a><a href="/who-should-not-use-this-stack/">Who should skip it</a><a href="/tools/intake-cost-calculator.html">Cost calculator</a></nav><div class="tag">real accounts / measured in operations / broken on purpose / published with evidence</div></div></header>
-<main class="wrap"><blockquote>
-<p><strong>Advertising notice:</strong> this page currently contains no advertising (affiliate) links. If we
-add any, each will be marked next to the link and this notice will be updated. Where a
-statement is our judgment rather than a measurement, it says so.</p>
-</blockquote>
-<h1>Who should not automate client intake with Tally, Make, HubSpot and Brevo</h1><div class="strip"><span>type <b>who should skip it</b></span><span>tested <b>2026-08-20</b></span><span>evidence <b>client-intake-v1 + client-intake-v2</b></span><span class="ok">status approved for publication</span></div>
-<p><strong>Based on our tests of 2026-08-16 and 2026-08-20 on the free plans (Tally Free and HubSpot Free
-CRM, accounts created 2026-08-05; Brevo Free, 2026-08-06; Make Free, license read 2026-08-20).</strong>
-Our <a href="/tested-client-intake-workflow/">tested workflow</a> works for the buyer we built it for: a
-solo consultant or 1-5 person agency with a modest lead flow. This page is the other half of
-an honest recommendation: the situations where we would tell you not to use it, each tied to
-something we observed.</p>
-<h2>Skip this stack if any of these is true</h2>
-<ol>
-<li>
-<p><strong>A missed acknowledgement would cost you a client.</strong> Before we added error handling, two
-   provoked failures each left a lead with a CRM record but no reply, and switched the whole
-   scenario off. With handlers (v2) the lead still got a reply in our test, but we observed
-   that once. If "always replies" is a contractual or reputational must, use a tool with
-   delivery guarantees and support, or keep a human in the loop.</p>
-</li>
-<li>
-<p><strong>You expect more than about 166 new leads a month and want to stay free.</strong> A healthy
-   new-lead run consumed 6 Make credits in every measured case; failed and handled runs
-   measured 4 to 7. Make Free includes 1,000 credits a month (checked on 2026-08-20), so 166
-   healthy runs use 996 credits and retries, alerts and duplicates change the total. Past the
-   cap the next step is Make Core at $9 a month on monthly billing (checked on 2026-08-20), and
-   the "all free" premise is gone. Our <a href="/tools/intake-cost-calculator.html">calculator</a> does
-   the arithmetic for your mix.</p>
-</li>
-<li>
-<p><strong>You only need a form that creates a contact.</strong> HubSpot's own free form builder does that
-   without Make or Brevo (vendor page checked on 2026-08-18; we did not test it). That removes
-   two tools from the narrower workflow.</p>
-</li>
-<li>
-<p><strong>You want the acknowledgement to come from a personal Gmail address.</strong> Make refused a
-   personal @gmail.com sender on both connection types we tried (plain SMTP and its restricted
-   Google OAuth path). Make's connection dialog pointed personal Google accounts to an
-   additional setup guide; we did not test that route. We switched to Brevo instead.</p>
-</li>
-<li>
-<p><strong>Duplicate submissions must be merged, not dropped.</strong> Two submissions of the same email in
-   rapid succession slipped past the search-based check in our tests (once during a v1 queue
-   burst, once in our single v2 race test at 29 milliseconds). Without handlers that errored and
-   deactivated the scenario; with handlers the duplicate was dropped with an alert. In neither
-   version is the newer submission merged into the existing contact.</p>
-</li>
-<li>
-<p><strong>You need Make execution-log history beyond 7 days on the free plan.</strong> Make's pricing page
-   lists 7-day execution log retention for Free and 30 days for Core (checked on 2026-08-20;
-   the 7 days is also what our account's license reported through Make's API). In our
-   attempts we could not pull per-run module detail through the API at all.</p>
-</li>
-<li>
-<p><strong>You need a verified erasure workflow for personal data.</strong> When we bulk-deleted test
-   contacts on 2026-08-16, HubSpot showed a notice saying the action does not follow the rules
-   of certain privacy laws and that, to follow them, contacts must be deleted one at a time from
-   the contact's profile. We transcribed the notice but did not capture a screenshot, and we
-   have not verified HubSpot's current documentation on privacy-request deletion. We cannot
-   tell you what any law requires; we can tell you the CRM itself flags bulk deletion. Verify
-   the process and get proper advice before relying on it.</p>
-</li>
-<li>
-<p><strong>Nobody will look at a dashboard regularly.</strong> In each of our two one-off v2 failure
-   tests the handler sent an alert; one left a deal unlinked, the other dropped the newer
-   duplicate submission. We judge that both need operator review, and that if no one reads
-   the alerts the automation will quietly drift. That is judgment, not a measured failure
-   rate.</p>
-</li>
-<li>
-<p><strong>You need first and last names as separate fields.</strong> Our mapping stores the full name in
-   HubSpot's first-name property. Fixable, but not fixed in the template.</p>
-</li>
-<li>
-<p><strong>You are already on a paid CRM with native intake automation.</strong> We did not test those
-    products; this is a judgment that a built-in path usually beats a bolted-on one.</p>
-</li>
-</ol>
-<h2>It is a reasonable fit if</h2>
-<p>You have a trickle of inbound leads, you accept checking one dashboard and one alert inbox,
-you can live with a dropped duplicate or an unlinked deal now and then, and you want to see
-exactly what the automation does before you trust it. That is the buyer we tested for.</p>
-<h2>The non-affiliate alternatives we would point to first</h2>
-<ul>
-<li>HubSpot's free form builder for plain capture (checked on 2026-08-18).</li>
-<li>Self-hosted n8n if you want no operation caps and are comfortable running a server
-  (n8n pricing page, checked on 2026-08-18); we have not tested it.</li>
-</ul>
-<hr />
-<p><em>Evidence packs client-intake-v1 and client-intake-v2. Each numbered item maps to this page's
-claim ledger; items marked as judgment are inferences, not measurements.</em></p></main>
+<main class="wrap"><h1>Page not found</h1><p>That address does not exist on this site. The pages we publish are listed on the <a href="/">home page</a>.</p></main>
 <footer><div class="wrap"><p>Workflow Test Lab. Every recommendation on this site is based on our own documented testing; each page names its test date, the plans used, and its evidence pack. Pages that contain advertising (affiliate) links say so at the top and mark each such link next to the link.</p>
 <p>No tracking cookies, no analytics scripts, no third-party embeds. The cost calculator runs entirely in your browser. Operated from Finland. &copy; 2026</p>
 <p></p></div></footer>
