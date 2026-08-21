@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>The client-intake Make blueprint: download, import, and what to change before it runs | Workflow Test Lab</title><meta name="description" content="The client-intake Make blueprint: download, import, and what to change before it runs (tested 2026-08-20)">
+<title>The client-intake Make blueprint: download, import, and what to change before it runs | Workflow Test Lab</title><meta name="description" content="The client-intake Make blueprint: download, import, and what to change before it runs (tested 2026-08-21)">
 <meta name='impact-site-verification' value='68243723-46ca-4e30-aaf0-d4f93802c4c2'>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231d5bbf'/%3E%3Ctext x='16' y='22' font-family='system-ui,sans-serif' font-size='18' font-weight='800' text-anchor='middle' fill='white'%3EW%3C/text%3E%3C/svg%3E">
 <style>
@@ -73,14 +73,19 @@ footer .wrap{padding:22px 22px 48px} footer p{max-width:none}
 add any, each will be marked next to the link and this notice will be updated. Where we
 rely on vendor documentation or have not tested something, the text says so.</p>
 </blockquote>
-<h1>The client-intake Make blueprint: download, import, and what to change before it runs</h1><div class="strip"><span>type <b>template</b></span><span>tested <b>2026-08-20</b></span><span>evidence <b>client-intake-v2 (based on client-intake-v1)</b></span><span class="ok">status approved for publication</span></div>
-<p><strong>Tested 2026-08-16 (v1, two rounds) and 2026-08-20 (v2 with error handlers, each case once).
+<h1>The client-intake Make blueprint: download, import, and what to change before it runs</h1><div class="strip"><span>type <b>template</b></span><span>tested <b>2026-08-21</b></span><span>evidence <b>client-intake-v2 (based on client-intake-v1)</b></span><span class="ok">status approved for publication</span></div>
+<p><strong>Tested 2026-08-16 (v1, two rounds), 2026-08-20 (v2 with error handlers, each case once) and 2026-08-21 (v2.1, richer alert emails, each handler once with the final text).
 Plans used, checked on the dates shown: Tally Free and HubSpot Free CRM (accounts created
 2026-08-05), Brevo Free (2026-08-06), Make Free (license read via API 2026-08-20).</strong> This is the
 exact scenario from our <a href="/tested-client-intake-workflow/">tested workflow guide</a>, exported from
 Make as a blueprint file. It is not a diagram; it is the thing that ran.</p>
 <h2>What you get</h2>
 <ul>
+<li><code>client-intake-v2.1.blueprint.json</code> (recommended): the v2 scenario below with richer alert emails.
+  A handled failure now emails you the scenario name and id, the failed step, the error type and
+  the full error message from HubSpot, the execution id, a run-log URL in the format of Make's
+  history view, all six form fields, and (for the association failure) the HubSpot contact and deal ids. Tested
+  2026-08-21, one provoked failure per handler plus one healthy run.</li>
 <li><code>client-intake-v2.blueprint.json</code>: Tally webhook trigger, HubSpot contact search with an
   exact email filter, a router with a new-lead path (create contact, create deal, link deal to
   contact through one HubSpot API call, send acknowledgement through Brevo) and an existing-
@@ -96,8 +101,9 @@ lab account's name and address in those labels and in the email modules. In the 
 copies those are replaced with placeholders (<code>Your HubSpot CRM connection</code>, <code>you@example.com</code>,
 <code>sender@example.com</code>, <code>Your Company</code>). Your Make account will ask you to pick your own
 connections on import anyway.</p>
-<p><strong>Download:</strong> <code>client-intake-v2.blueprint.json</code> and <code>client-intake-v1.blueprint.json</code>
-(final links land here when the site is live).</p>
+<p><strong>Download:</strong> <a href="/downloads/client-intake-v2.1.blueprint.json">client-intake-v2.1.blueprint.json</a>,
+<a href="/downloads/client-intake-v2.blueprint.json">client-intake-v2.blueprint.json</a> and
+<a href="/downloads/client-intake-v1.blueprint.json">client-intake-v1.blueprint.json</a>.</p>
 <h2>Import in Make</h2>
 <ol>
 <li>Create a new scenario and open the three-dot menu in the scenario editor; choose Import
@@ -121,7 +127,12 @@ either fail to map your data or send mail to a placeholder address.</p>
    response, then open each listed module and re-pick whichever of those fields it maps: email
    in 3, 5, 13, 20, 22; name in 5, 6, 7, 13, 20, 22; company in 5 and 6.</li>
 <li><strong>Alert recipient (modules 20 and 22).</strong> The error-handler emails go to <code>you@example.com</code>.
-   Put your own address there.</li>
+   Put your own address there. In v2.1 the alert body uses Make's system variables
+   (<code>var.scenario.name</code>, <code>var.scenario.id</code>, <code>var.scenario.executionId</code>, <code>var.scenario.url</code>) and the
+   failed module's error bundle (<code>12.error.message</code> and <code>5.error.message</code>); these need no edits.
+   One thing we learned the hard way: a literal <code>=</code> followed by two hexadecimal digits in the
+   plain-text body was decoded as quoted-printable on its way to the inbox (observed once,
+   2026-08-21; cause not isolated), so keep <code>=</code> signs out of the alert text.</li>
 <li><strong>Sender and reply-to (modules 13, 20, 22).</strong> Both the sender and the reply-to fields hold
    <code>Your Company &lt;sender@example.com&gt;</code>. Replace them with a sender you have verified in Brevo.
    In our tests Brevo rewrote the visible sender of our unauthenticated Gmail address to its
@@ -157,7 +168,10 @@ either fail to map your data or send mail to a placeholder address.</p>
 </ol>
 <h2>Known limits of this template</h2>
 <ul>
-<li>v2 error handling was observed once per case. Re-test in your own account.</li>
+<li>v2 error handling was observed once per case; the v2.1 alert text once per handler. Re-test in
+  your own account.</li>
+<li>The run-log link in the alert follows the URL pattern Make uses in its History view. We read it
+  in the delivered email; we did not click it from a signed-in browser in the test.</li>
 <li>A handled association failure leaves the deal unlinked; the alert reports the failed step and
   points you to the run history. Linking the deal is a manual step.</li>
 <li>A handled duplicate that slips past the search is dropped, not merged into the existing contact.</li>
@@ -169,8 +183,8 @@ willing to verify it with the four submissions above. <strong>Who should skip it
 form-to-contact capture is enough, HubSpot's free form builder does that with no Make at all
 (checked on 2026-08-18), and it is the non-affiliate alternative we would point you to first.</p>
 <hr />
-<p><em>Evidence packs client-intake-v1 and client-intake-v2. Module numbers refer to the blueprint's
-internal IDs. Material statements map to this page's claim ledger; inferences and untested
+<p><em>Evidence packs client-intake-v1 and client-intake-v2 (including the v2.1 extension of 2026-08-21).
+Module numbers refer to the blueprint's internal IDs. Material statements map to this page's claim ledger; inferences and untested
 expectations are labeled as such.</em></p></main>
 <footer><div class="wrap"><p>Workflow Test Lab. Every recommendation on this site is based on our own documented testing; each page names its test date, the plans used, and its evidence pack. Pages that contain advertising (affiliate) links say so at the top and mark each such link next to the link.</p>
 <p>No tracking cookies, no analytics scripts, no third-party embeds. The cost calculator runs entirely in your browser. Operated from Finland. &copy; 2026</p></div></footer>

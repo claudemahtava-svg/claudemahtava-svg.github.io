@@ -97,7 +97,11 @@ the reply, are not visible at a glance in the CRM.</p>
 an alert email to the operator, then Make's Resume directive so the run continues. Re-ran
 the same broken call: the run ended as Success, the lead still received the acknowledgement,
 we received the alert naming the lead and the failed step, and the scenario stayed active.
-The deal is still left unlinked; the alert is what tells you to fix it. (Make documents five
+The deal is still left unlinked; the alert is what tells you to fix it. On 2026-08-21 we extended
+the alert so it also carries HubSpot's error message, the execution id, a link to the run in Make's
+history, every form field and the contact and deal ids, and provoked the same failure again: same
+outcome. The email now carries the deal and contact ids you need for the manual fix; we did not
+navigate the run-log link from a signed-in browser. Observed once with the extended text. (Make documents five
 handler directives: Skip, Retry, Resume, Commit, Rollback; Rollback is the default when no
 handler is attached, checked 2026-08-20.) Observed once so far.</p>
 <h2>2. One error switched our webhook scenario off</h2>
@@ -134,7 +138,9 @@ step and submitted the same new address twice, 29 milliseconds apart. The race s
 (it is HubSpot index lag, not the filter), but the outcome changed: one contact, one deal, one
 acknowledgement, one alert to us, run ended as Success, scenario stayed active. Trade-off: the
 duplicate submission's data is dropped rather than merged into the existing contact. Observed
-once. An email-keyed create-or-update path remains unverified.</p>
+once. An email-keyed create-or-update path remains unverified. For scale: on 2026-08-21 a duplicate
+that arrived 2.1 seconds after the original was found by the search and took the normal update
+path. The only slip we have observed is the 29 ms case (one observation each).</p>
 <h2>5. The audit trail on the free plan lasts 7 days</h2>
 <p><strong>What happened.</strong> We read the account limits through Make's API on 2026-08-20: the free
 plan's license lists a 7-day retention, at most 2 scenarios, and 1,000 credits per month
@@ -169,6 +175,10 @@ repeat for the rest of the build.</p>
 <li>Error-handler routes with an alert email on the contact-creation and association steps
   (2026-08-20): handled errors no longer deactivate the scenario, the operator is told, and
   the lead still gets acknowledged when the association step is the one that fails.</li>
+<li>An alert that names the error, the run and the lead (2026-08-21): scenario name, failed step,
+  HubSpot's error text, execution id, run-log URL (format matches Make's history view; not navigated
+  in the test), all form fields, and for the association failure the contact and deal ids. Four
+  handled failures that day left the error counter unchanged and the scenario active.</li>
 <li>Exact email filter in the CRM search instead of free-text query (2026-08-20).</li>
 <li>Saving the scenario explicitly after every edit (prevented a repeat of the module loss).</li>
 </ul>
@@ -185,7 +195,8 @@ error causes, other mail providers, sending from an authenticated custom domain,
 handler fixes beyond a single observation each. When we test them, this page changes.</p>
 <hr />
 <p><em>Evidence packs: client-intake-v1 (tested 2026-08-16, two rounds, two forced failures) and
-client-intake-v2 (tested 2026-08-20, error handling, verified through Make and Gmail APIs).
+client-intake-v2 (tested 2026-08-20, error handling; extended 2026-08-21 with richer alerts;
+verified through Make and Gmail APIs).
 Material statements map to this page's claim ledger; inferences and untested options are
 labeled as such.</em></p></main>
 <footer><div class="wrap"><p>Workflow Test Lab. Every recommendation on this site is based on our own documented testing; each page names its test date, the plans used, and its evidence pack. Pages that contain advertising (affiliate) links say so at the top and mark each such link next to the link.</p>
