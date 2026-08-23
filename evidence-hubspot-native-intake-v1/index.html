@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Evidence record: error handling and alerts for the client-intake chain (v2, v2.1, v2.2) | Workflow Test Lab</title><meta name="description" content="Evidence record: error handling and alerts for the client-intake chain (v2, v2.1, v2.2) (tested 2026-08-20)">
+<title>"Evidence record: a CRM's own free form as the whole intake (native form, no automation layer)" | Workflow Test Lab</title><meta name="description" content=""Evidence record: a CRM's own free form as the whole intake (native form, no automation layer)" (tested 2026-08-22)">
 <meta name='impact-site-verification' value='68243723-46ca-4e30-aaf0-d4f93802c4c2'>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231d5bbf'/%3E%3Ctext x='16' y='22' font-family='system-ui,sans-serif' font-size='18' font-weight='800' text-anchor='middle' fill='white'%3EW%3C/text%3E%3C/svg%3E">
 <style>
@@ -68,14 +68,14 @@ footer .wrap{padding:22px 22px 48px} footer p{max-width:none}
 @media print{header nav,footer{display:none} body{font-size:12pt} .runlog .row{animation:none;opacity:1}}
 </style></head><body>
 <header><div class="wrap"><a class="brand" href="/">Workflow Test <span>Lab</span></a><nav><a href="/">Home</a><a href="/tested-client-intake-workflow/">Tested workflow</a><a href="/tested-hubspot-native-intake/">Tested workflow</a><a href="/what-breaks-client-intake/">What breaks</a><a href="/intake-workflow-template/">Template</a><a href="/hubspot-native-vs-stack/">Who should skip it</a><a href="/who-should-not-use-this-stack/">Who should skip it</a><a href="/tools/intake-cost-calculator.html">Cost calculator</a></nav><div class="tag">real accounts / measured in operations / broken on purpose / published with evidence</div></div></header>
-<main class="wrap"><h1>Evidence record: error handling and alerts for the client-intake chain (v2, v2.1, v2.2)</h1><div class="strip"><span>run record</span><span>pack <b>client-intake-v2</b></span><span>tested <b>2026-08-20</b></span></div>
-<p><strong>This page is the run record behind our published recommendations.</strong> It lists what we
+<main class="wrap"><h1>"Evidence record: a CRM's own free form as the whole intake (native form, no automation layer)"</h1><div class="strip"><span>run record</span><span>pack <b>hubspot-native-intake-v1</b></span><span>tested <b>2026-08-22</b></span></div>
+<p><strong>This page is the run record for the evidence pack named below.</strong> It lists what we
 tested, when, what we observed case by case, and what we did not test. It is generated from
 the pack file in our repository, so it cannot quietly drift from the source. Identifiers
 that would expose our accounts (record ids, run ids, message ids, addresses) are left out on
 purpose; the underlying files are available on request.</p>
 <h2>The question this pack answers</h2>
-<p>When a step in a free-tier intake automation fails, can the workflow be made to keep running, tell the operator what happened, and still acknowledge the lead?</p>
+<p>If you are already on a free CRM plan, does its own form do the client-intake job on its own, and what does it not do?</p>
 <h2>What was tested, and when</h2>
 <table>
 <thead>
@@ -87,15 +87,15 @@ purpose; the underlying files are available on request.</p>
 <tbody>
 <tr>
 <td>Pack</td>
-<td><code>client-intake-v2</code></td>
+<td><code>hubspot-native-intake-v1</code></td>
 </tr>
 <tr>
 <td>First tested</td>
-<td>2026-08-20</td>
+<td>2026-08-22</td>
 </tr>
 <tr>
 <td>Runs</td>
-<td>one round per case for v2 (2026-08-20), one round per handler for the enriched alert text (2026-08-21), one healthy run for the authenticated sender domain (2026-08-22)</td>
+<td>two independent runs on separate days (2026-08-22 and 2026-08-23), each covering the same six cases, plus a user-agent diagnostic and an ordinary-browser control</td>
 </tr>
 <tr>
 <td>Status</td>
@@ -103,19 +103,19 @@ purpose; the underlying files are available on request.</p>
 </tr>
 <tr>
 <td>Pages built on it</td>
-<td><a href="/what-breaks-client-intake/">what-breaks-client-intake</a>, <a href="/intake-workflow-template/">intake-workflow-template</a></td>
+<td><a href="/tested-hubspot-native-intake/">tested-hubspot-native-intake</a>, <a href="/hubspot-native-vs-stack/">hubspot-native-vs-stack</a>, <a href="/who-should-not-use-this-stack/">who-should-not-use-this-stack</a></td>
 </tr>
 </tbody>
 </table>
 <p><strong>Stack and plans</strong></p>
 <ul>
-<li>Form: Tally, free plan</li>
-<li>Automation: Make, free plan</li>
+<li>Form: the CRM's own form builder, free plan, published as a standalone page</li>
+<li>Automation: none, which is the point of this pack</li>
 <li>CRM: HubSpot Free CRM, EU data centre</li>
-<li>Acknowledgement and alert email: Brevo, free plan</li>
+<li>Email to the lead: none configured, see limitations</li>
 </ul>
 <h2>How we tested</h2>
-<p>The scenario was edited through the automation platform's API, then exercised with scripted browser submissions against the live form. Failures were induced on purpose in a controlled window and reverted immediately afterwards. Each run was checked in the run history for status and operation count, in the CRM for the records, and in the receiving mailbox for the alert and the acknowledgement. Header authentication results were read from the delivered message.</p>
+<p>A six-field intake form was built in the CRM's form builder and published. Scripted browser submissions were sent from a controlled machine, twice on separate days, using an ordinary desktop browser user agent unless a case says otherwise. Every case was verified by reading the records back through the CRM's API (creation time, source, form fields, conversion counters) and by reading the notification mailbox. No records were created or edited by hand during the runs.</p>
 <h2>Cases</h2>
 <table>
 <thead>
@@ -129,46 +129,60 @@ purpose; the underlying files are available on request.</p>
 </thead>
 <tbody>
 <tr>
-<td>healthy run with handlers attached</td>
-<td>new lead</td>
-<td>full chain completed, acknowledgement delivered</td>
-<td>6</td>
-<td>confirmed</td>
+<td>new lead, plain characters</td>
+<td>a previously unseen address with all six fields filled</td>
+<td>contact created about one second after submission (1.03 s and 1.18 s measured), carrying the form as its source and first conversion, lifecycle stage lead, and all six field values including both dropdowns; one notification email</td>
+<td>n/a</td>
+<td>confirmed (both runs)</td>
 </tr>
 <tr>
-<td>association step failing, handler with the Resume directive (continue the run)</td>
-<td>association call made invalid on purpose, one submission</td>
-<td>contact and deal created, association rejected, alert email delivered to the operator, run continued and the lead still received the acknowledgement, run ended as success, scenario stayed active</td>
-<td>7</td>
-<td>confirmed (repeated on 2026-08-21 with the enriched alert text)</td>
+<td>repeat submission of the same address</td>
+<td>same address 123 seconds later in run 1, 73 seconds later in run 2, with changed company, service interest and budget</td>
+<td>the same contact was updated, no second record was created, and the contact's form-submission counter moved from one to two; the notification arrived as a reconversion rather than a new submission</td>
+<td>n/a</td>
+<td>confirmed (both runs)</td>
 </tr>
 <tr>
-<td>two submissions of the same new address 29 milliseconds apart</td>
-<td>concurrent duplicate</td>
-<td>the search missed the just-created contact, the second create was rejected, the handler sent one alert and ended that run cleanly; one contact, one deal, one acknowledgement, one alert</td>
-<td>4 for the handled run</td>
-<td>confirmed (once)</td>
+<td>special characters</td>
+<td>Nordic characters and an apostrophe in the name and company</td>
+<td>values stored intact in the name, company and message fields</td>
+<td>n/a</td>
+<td>confirmed (both runs)</td>
 </tr>
 <tr>
-<td>duplicate 2.1 seconds after the original</td>
-<td>same address, slower spacing</td>
-<td>the search found the existing contact and the run took the update path</td>
-<td>3</td>
-<td>confirmed (once)</td>
+<td>malformed address</td>
+<td>an address with no top-level domain</td>
+<td>the form stayed on screen with a field-level error and nothing was created</td>
+<td>n/a</td>
+<td>confirmed (both runs)</td>
 </tr>
 <tr>
-<td>create-contact step failing, handler with the Ignore directive (drop that submission, keep the scenario running)</td>
-<td>an invalid property added on purpose, one submission</td>
-<td>no contact, no deal, no acknowledgement for that submission, alert email delivered naming the failed step and the platform error text, scenario stayed active</td>
-<td>4</td>
-<td>confirmed (once, with the enriched alert text)</td>
+<td>required field missing</td>
+<td>the required name field left empty</td>
+<td>a field-level and a form-level error, nothing created</td>
+<td>n/a</td>
+<td>confirmed (both runs)</td>
 </tr>
 <tr>
-<td>acknowledgement from the authenticated sender domain</td>
-<td>new lead after the sender domain was authenticated</td>
-<td>acknowledgement delivered from the lab's own domain; the receiving provider reported DKIM, SPF and DMARC as passing; no rewriting to the mail provider's shared domain</td>
-<td>6</td>
-<td>confirmed (once)</td>
+<td>two submissions of the same new address a fraction of a second apart</td>
+<td>parallel submissions, 106 milliseconds apart in run 1 and 235 milliseconds in run 2</td>
+<td>exactly one contact in both runs, and two notification emails in both runs (one new submission, one reconversion), while the contact's own submission counter read one rather than two; the run 1 counter still read one about twenty hours later, so this is not indexing delay. In both runs the later-arriving submission supplied the stored field values    status: confirmed (both runs); the counter behaviour is the finding, and the later arrival won both times</td>
+<td>n/a</td>
+<td></td>
+</tr>
+<tr>
+<td>deals</td>
+<td>every case above</td>
+<td>no deal was created by any submission in either run; the only deal on the test days came from an unrelated automated test</td>
+<td>n/a</td>
+<td>confirmed (both runs)</td>
+</tr>
+<tr>
+<td>automation user-agent diagnostic</td>
+<td>submissions from a browser whose user agent identified itself as headless, compared with an ordinary desktop browser user agent, and with the automation flag varied independently</td>
+<td>the headless-identifying user agent received the normal success page and created nothing, in both runs; an ordinary browser in a visible window created the contact normally even with the automation flag left visible. The user-agent string decided the outcome; the automation flag did not</td>
+<td>n/a</td>
+<td>confirmed (drop observed twice, ordinary-browser control observed once)</td>
 </tr>
 </tbody>
 </table>
@@ -177,20 +191,18 @@ is a single round. Where a case was seen once, the status column says so, and ev
 cites it says "observed once". We do not treat one observation as a pattern.</p>
 <h2>What the pack establishes</h2>
 <ul>
-<li>Handled errors do not increase the scenario error counter and do not switch the scenario off.</li>
-<li>The Resume directive keeps the lead acknowledged when a later step fails, and leaves the deal unlinked.</li>
-<li>The Ignore directive drops that submission cleanly; the existing record is not updated from it.</li>
-<li>The alert email can carry the scenario name, the failed step, the platform error text, the run identifier, a link to that run, every form field, and the created record identifiers.</li>
-<li>Directives themselves are not billed; the alert email costs one credit.</li>
-<li>An authenticated sender domain removes the shared-domain rewrite seen in v1 (observed once, 2026-08-22). Our template page still describes the earlier unauthenticated behaviour; that update is queued and not yet published.</li>
+<li>The free form creates and updates contacts by email address without any automation layer, and keeps all form fields.</li>
+<li>It creates no deal. The vendor documents record creation as a workflow action for paid users.  - It notifies the operator on every accepted submission, as a new submission or a reconversion. Submissions it drops silently produce no notification.</li>
+<li>It blocks a malformed address and an empty required field before anything is created.</li>
+<li>Two near-simultaneous submissions produce one contact and two notifications, but the contact's submission counter shows one. Counting intake from the record alone can undercount.</li>
+<li>Submissions from a browser identifying itself as headless were accepted on screen and dropped silently. This is a note for anyone monitoring their own form with a script, not evidence about ordinary visitors.  - No automation operations are consumed, because there is no automation layer. We did not test whether the CRM itself imposes a form-submission volume limit.</li>
 </ul>
 <h2>What it does not establish</h2>
 <ul>
-<li>Most cases were observed once. The association-failure case was observed twice (once in the base version and again with the enriched alert text), and the healthy path three times. Every page that cites a single observation says so.</li>
-<li>The create-contact failure was induced with an invalid property, not by a real duplicate race.</li>
-<li>The run link in the alert was read in the delivered message; it was not opened from a signed-in browser during the test.</li>
-<li>A literal equals sign followed by two hexadecimal digits in the alert body was mangled in transport once; the final text avoids equals signs.</li>
-<li>The transactional acknowledgement still carries the mail provider's open-tracking pixel and an unsubscribe header; turning that off is queued.</li>
+<li>The lead receives no acknowledgement in this pack because we did not configure one. The free plan does offer one send-email workflow per form, but it is a marketing email restricted to marketing contacts and saving it requires an email footer with a physical postal address, which this lab does not publish. That is our constraint, not a product limit, and every page that mentions it says so.</li>
+<li>We did not test whether an ordinary visitor's browser can be filtered, and we did not read the vendor's own submissions or spam views to see whether the dropped submissions were recorded there.</li>
+<li>The ordinary-browser control was observed once.  - The later-arriving submission won both times, but server-side processing order was not measured, so treat it as an observation rather than a rule.</li>
+<li>The synthetic test contacts had not been deleted when this record was generated; the connector we use has no delete action, so removal is a manual step and will be recorded in the run log.</li>
 </ul>
 <h2>Artifacts</h2>
 <table>
@@ -203,32 +215,32 @@ cites it says "observed once". We do not treat one observation as a pattern.</p>
 </thead>
 <tbody>
 <tr>
-<td><a href="/downloads/client-intake-v2.blueprint.json">client-intake-v2.blueprint.json</a></td>
-<td>Exported scenario with error handlers (sanitised)</td>
-<td><code>28c9d367e1f6911bccb86044c5e456eb6a861659c923ba37195145c1cdc05cc4</code></td>
-</tr>
-<tr>
-<td><a href="/downloads/client-intake-v2.1.blueprint.json">client-intake-v2.1.blueprint.json</a></td>
-<td>Exported scenario with enriched alert emails (sanitised, recommended)</td>
-<td><code>823c1cde840d758008aca4f7e4d2fb29e61c0bfcca7fc9412af04b040394ff30</code></td>
-</tr>
-<tr>
-<td>test-log.md</td>
-<td>Run log for v2 (not published; available on request)</td>
+<td>PLAN.md</td>
+<td>Test plan written before the runs (not published; available on request)</td>
 <td>not published</td>
 </tr>
 <tr>
-<td>test-log-v2.1.md</td>
-<td>Run log for the alert extension and the sender-domain change (not published; available on request)</td>
+<td>test-log-run1.md</td>
+<td>Run log, first run (not published; available on request)</td>
+<td>not published</td>
+</tr>
+<tr>
+<td>test-log-run2.md</td>
+<td>Run log, second run (not published; available on request)</td>
+<td>not published</td>
+</tr>
+<tr>
+<td>hubspot-form-automations-2026-08-21.md</td>
+<td>Dated capture of the vendor's form-automation documentation (not published; available on request)</td>
 <td>not published</td>
 </tr>
 </tbody>
 </table>
 <h2>Changelog</h2>
 <ul>
-<li>2026-08-20: v2 tested (error handlers, exact-match search) and used to update two approved pages.</li>
-<li>2026-08-21: v2.1 tested (alert emails carrying the platform error text, the run identifier and the lead fields); pages re-approved.</li>
-<li>2026-08-22: v2.2 tested (acknowledgement and alerts sent from the lab's authenticated domain). Page wording update is queued and not yet published.</li>
+<li>2026-08-21: pack planned, hypotheses and disqualifying results written before any test.</li>
+<li>2026-08-22: first run, plus a diagnostic that isolated the user-agent behaviour.</li>
+<li>2026-08-23: second run on a separate day, with an ordinary-browser control; pack marked passed.</li>
 </ul>
 <hr />
 <p><em>Corrections are welcome: hello@workflowtestlab.com. If you believe a result here is wrong,

@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Who should not automate client intake with Tally, Make, HubSpot and Brevo | Workflow Test Lab</title><meta name="description" content="Who should not automate client intake with Tally, Make, HubSpot and Brevo (tested 2026-08-23)">
+<title>What a HubSpot Free form actually does with a client intake, measured over two runs | Workflow Test Lab</title><meta name="description" content="What a HubSpot Free form actually does with a client intake, measured over two runs (tested 2026-08-23)">
 <meta name='impact-site-verification' value='68243723-46ca-4e30-aaf0-d4f93802c4c2'>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231d5bbf'/%3E%3Ctext x='16' y='22' font-family='system-ui,sans-serif' font-size='18' font-weight='800' text-anchor='middle' fill='white'%3EW%3C/text%3E%3C/svg%3E">
 <style>
@@ -69,103 +69,93 @@ footer .wrap{padding:22px 22px 48px} footer p{max-width:none}
 </style></head><body>
 <header><div class="wrap"><a class="brand" href="/">Workflow Test <span>Lab</span></a><nav><a href="/">Home</a><a href="/tested-client-intake-workflow/">Tested workflow</a><a href="/tested-hubspot-native-intake/">Tested workflow</a><a href="/what-breaks-client-intake/">What breaks</a><a href="/intake-workflow-template/">Template</a><a href="/hubspot-native-vs-stack/">Who should skip it</a><a href="/who-should-not-use-this-stack/">Who should skip it</a><a href="/tools/intake-cost-calculator.html">Cost calculator</a></nav><div class="tag">real accounts / measured in operations / broken on purpose / published with evidence</div></div></header>
 <main class="wrap"><blockquote>
-<p><strong>Advertising notice:</strong> this page currently contains no advertising (affiliate) links. If we
-add any, each will be marked next to the link and this notice will be updated. Where a
-statement is our judgment rather than a measurement, it says so.</p>
+<p><strong>Advertising disclosure:</strong> this page contains no advertising (affiliate) links. If we add any,
+each will be marked next to the link and this notice will be updated. Where we rely on vendor
+documentation or have not tested something, the text says so.</p>
 </blockquote>
-<h1>Who should not automate client intake with Tally, Make, HubSpot and Brevo</h1><div class="strip"><span>type <b>who should skip it</b></span><span>tested <b>2026-08-23</b></span><span>evidence <b>client-intake-v1 + client-intake-v2 + hubspot-native-intake-v1</b></span><span><a href="/evidence-client-intake-v1/">see the run record</a></span><span class="ok">status approved for publication</span></div>
-<p><strong>Based on our tests of 2026-08-16 and 2026-08-20 on the free plans (Tally Free and HubSpot Free
-CRM, accounts created 2026-08-05; Brevo Free, 2026-08-06; Make Free, license read 2026-08-20).</strong>
-Our <a href="/tested-client-intake-workflow/">tested workflow</a> works for the buyer we built it for: a
-solo consultant or 1-5 person agency with a modest lead flow. This page is the other half of
-an honest recommendation: the situations where we would tell you not to use it, each tied to
-something we observed.</p>
-<h2>Skip this stack if any of these is true</h2>
-<ol>
-<li>
-<p><strong>A missed acknowledgement would cost you a client.</strong> Before we added error handling, two
-   provoked failures each left a lead with a CRM record but no reply, and switched the whole
-   scenario off. With handlers (v2) the lead still got a reply in our test, but we observed
-   that once. If "always replies" is a contractual or reputational must, use a tool with
-   delivery guarantees and support, or keep a human in the loop.</p>
-</li>
-<li>
-<p><strong>You expect more than about 166 new leads a month and want to stay free.</strong> A healthy
-   new-lead run consumed 6 Make credits in every measured case; failed and handled runs
-   measured 4 to 7. Make Free includes 1,000 credits a month (checked on 2026-08-20), so 166
-   healthy runs use 996 credits and retries, alerts and duplicates change the total. Past the
-   cap the next step is Make Core at $9 a month on monthly billing (checked on 2026-08-20), and
-   the "all free" premise is gone. Our <a href="/tools/intake-cost-calculator.html">calculator</a> does
-   the arithmetic for your mix.</p>
-</li>
-<li>
-<p><strong>You only need a form that creates a contact.</strong> HubSpot's own free form builder does that
-   without Make or Brevo, and we have now tested it rather than quoting the vendor: two runs on
-   2026-08-22 and 2026-08-23 created the contact with all six fields in about one second, updated
-   the same record on a repeat submission, kept special characters intact, blocked a malformed
-   address and an empty required field, and notified us by email on every submission. It created no
-   deal, and we did not configure the lead acknowledgement (that is our constraint, explained on
-   the <a href="/hubspot-native-vs-stack/">comparison page</a>). If a contact record and your own reply are
-   enough, that removes two tools and the whole automation failure surface.
-   Details: <a href="/tested-hubspot-native-intake/">what the free form does</a>.</p>
-</li>
-<li>
-<p><strong>You want the acknowledgement to come from a personal Gmail address.</strong> Make refused a
-   personal @gmail.com sender on both connection types we tried (plain SMTP and its restricted
-   Google OAuth path). Make's connection dialog pointed personal Google accounts to an
-   additional setup guide; we did not test that route. We switched to Brevo instead.</p>
-</li>
-<li>
-<p><strong>Duplicate submissions must be merged, not dropped.</strong> Two submissions of the same email in
-   rapid succession slipped past the search-based check in our tests (once during a v1 queue
-   burst, once in our single v2 race test at 29 milliseconds). Without handlers that errored and
-   deactivated the scenario; with handlers the duplicate was dropped with an alert. In neither
-   version is the newer submission merged into the existing contact.</p>
-</li>
-<li>
-<p><strong>You need Make execution-log history beyond 7 days on the free plan.</strong> Make's pricing page
-   lists 7-day execution log retention for Free and 30 days for Core (checked on 2026-08-20;
-   the 7 days is also what our account's license reported through Make's API). In our
-   attempts we could not pull per-run module detail through the API at all.</p>
-</li>
-<li>
-<p><strong>You need a verified erasure workflow for personal data.</strong> When we bulk-deleted test
-   contacts on 2026-08-16, HubSpot showed a notice saying the action does not follow the rules
-   of certain privacy laws and that, to follow them, contacts must be deleted one at a time from
-   the contact's profile. We transcribed the notice but did not capture a screenshot, and we
-   have not verified HubSpot's current documentation on privacy-request deletion. We cannot
-   tell you what any law requires; we can tell you the CRM itself flags bulk deletion. Verify
-   the process and get proper advice before relying on it.</p>
-</li>
-<li>
-<p><strong>Nobody will look at a dashboard regularly.</strong> In each of our two one-off v2 failure
-   tests the handler sent an alert; one left a deal unlinked, the other dropped the newer
-   duplicate submission. We judge that both need operator review, and that if no one reads
-   the alerts the automation will quietly drift. That is judgment, not a measured failure
-   rate.</p>
-</li>
-<li>
-<p><strong>You need first and last names as separate fields.</strong> Our mapping stores the full name in
-   HubSpot's first-name property. Fixable, but not fixed in the template.</p>
-</li>
-<li>
-<p><strong>You are already on a paid CRM with native intake automation.</strong> We did not test those
-    products; this is a judgment that a built-in path usually beats a bolted-on one.</p>
-</li>
-</ol>
-<h2>It is a reasonable fit if</h2>
-<p>You have a trickle of inbound leads, you accept checking one dashboard and one alert inbox,
-you can live with a dropped duplicate or an unlinked deal now and then, and you want to see
-exactly what the automation does before you trust it. That is the buyer we tested for.</p>
-<h2>The non-affiliate alternatives we would point to first</h2>
+<h1>What a HubSpot Free form actually does with a client intake, measured over two runs</h1><div class="strip"><span>type <b>tested workflow</b></span><span>tested <b>2026-08-23</b></span><span>evidence <b>hubspot-native-intake-v1</b></span><span><a href="/evidence-hubspot-native-intake-v1/">see the run record</a></span><span class="ok">status approved for publication</span></div>
+<p><strong>Tested 2026-08-22 and 2026-08-23 on a HubSpot Free portal, with no automation tool attached.</strong>
+We built a six field intake form in HubSpot's own form builder (name, email, company, service
+interest, budget range, message), published it as a standalone page, and submitted a scripted set
+of cases twice on separate days. Every result below was read back through HubSpot's API and the
+receiving inbox. The full case by case record is on the
+<a href="/evidence-hubspot-native-intake-v1/">evidence record for this pack</a>.</p>
+<p>This page answers one question: if you are already on HubSpot Free, what do you get from its own
+form, and what do you not get. The comparison against a form plus automation stack is on the
+<a href="/hubspot-native-vs-stack/">decision page</a>.</p>
+<h2>What it does, measured</h2>
 <ul>
-<li>HubSpot's free form builder for plain capture (checked on 2026-08-18).</li>
-<li>Self-hosted n8n if you want no operation caps and are comfortable running a server
-  (n8n pricing page, checked on 2026-08-18); we have not tested it.</li>
+<li><strong>A new email address becomes a contact in about one second.</strong> Measured 1.03 s in run 1 and
+  1.18 s in run 2, from submit to the record's creation time. The
+  contact carries the source (form), the form name as its first conversion, and lifecycle stage
+  lead. All six fields land on the record, including the two dropdowns.</li>
+<li><strong>A repeat submission of the same email updates the same contact.</strong> We resubmitted 123 seconds
+  later in run 1 and 73 seconds later in run 2 with a changed company, service interest and budget.
+  Both times the same record was updated, no second contact appeared, and the contact's form
+  submission counter went from 1 to 2.</li>
+<li><strong>Special characters survive.</strong> Søren Ø'Brien-Kärkkäinen at Åland &amp; Partners Oy in run 1 and
+  Åsa Ø'Neill-Väisänen at Öresund &amp; Kumppanit Oy in run 2 arrived intact.</li>
+<li><strong>The form blocks two bad inputs before anything is created.</strong> A malformed address (user@domain)
+  produced "Email must be formatted correctly" and no record. An empty required field produced a
+  field level and a form level error and no record. Both runs.</li>
+<li><strong>You get an email per accepted submission.</strong> New addresses produce a "new submission" notification,
+  repeat addresses a "contact reconversion" notification, to the address configured on the form.</li>
+<li><strong>Cost: nothing.</strong> No automation operations are consumed, because there is no automation layer,
+  so there is no operations budget to size. We did not test whether HubSpot itself limits form
+  submission volume on the free plan.</li>
 </ul>
+<h2>What it does not do, measured</h2>
+<ul>
+<li><strong>No deal is created.</strong> After both runs, a search for deals created on the test days returned
+  only one deal, and that came from an unrelated automated test, not from the form. If your intake
+  needs a deal record in a pipeline, the free form alone does not produce it. HubSpot's own
+  documentation lists record creation as a workflow action that is available to paid users
+  (help page captured 2026-08-21, copy in the evidence pack).</li>
+<li><strong>We configured no acknowledgement to the lead.</strong> This is our own limit, not a proven product one.
+  HubSpot Free does offer one simple workflow per form called "Send an email after form submission"
+  (documentation captured 2026-08-21, and the option was present in our form editor). We did not
+  use it, for two reasons we hit while setting it up: the email is a marketing email, so it is sent
+  only to contacts marked as marketing contacts, and saving it requires an email footer containing
+  a physical postal address, which this lab does not publish. So on this page, "no acknowledgement"
+  means "not configured by us", not "impossible on Free". If you are willing to publish a postal
+  address and manage marketing contacts, test that path yourself before deciding.</li>
+</ul>
+<h2>Two behaviours worth knowing before you rely on the record</h2>
+<p><strong>Two submissions arriving at almost the same moment produce one contact, and the counter shows
+one.</strong> We submitted the same new address twice in parallel, 106 milliseconds apart in run 1 and
+235 milliseconds apart in run 2. Both runs produced exactly one contact, which is the good news.
+But both runs also produced two notification emails (one "new submission", one "reconversion"),
+while the contact's own submission counter read 1, not 2. In run 1 it still read 1 twenty hours
+later, so this is not indexing lag. If you count intake volume from the contact record, a
+near simultaneous duplicate can be missed; the notification stream showed both.</p>
+<p><strong>In both runs the later arrival supplied the stored values.</strong> Read from the submit timestamps
+rather than our case labels: run 1 kept the submission that arrived 106 milliseconds second, run 2
+kept the one that arrived 235 milliseconds second. We did not measure how the server ordered the
+two requests internally, so treat this as a consistent observation across two runs rather than a
+documented rule.</p>
+<h2>A note for anyone monitoring their own form with a script</h2>
+<p>We hit this while automating the tests, and it is not a lead reliability finding, but it may cost
+someone a day of confusion. In our lab, a submission sent by a browser whose user agent string
+contained "HeadlessChrome" received the normal success page and created nothing: no contact, no
+notification. The same submission from an ordinary Chrome window was created normally, including
+when the automation flag was left visible. So the filter followed the user agent string, not
+automation as such. Observed twice for the drop, and once for the ordinary browser control.</p>
+<p>We did not test a human visitor's browser being wrongly filtered, and we did not look at HubSpot's
+own submissions or spam views to see whether the dropped submissions were recorded there. Nothing
+here says that ordinary visitor submissions are lost. What it does mean: if you monitor your own
+form with a headless browser, a green result can be false.</p>
+<h2>Who this is enough for</h2>
+<p><strong>Enough</strong>, on the evidence above: you want inbound contacts in HubSpot Free with their form
+answers, you handle the reply yourself from the notification email, and you do not need a deal
+record created automatically.</p>
+<p><strong>Not enough</strong>: you need the lead to get an immediate acknowledgement without publishing a postal
+address, you need a deal in a pipeline per intake, or you need duplicate submissions merged rather
+than one of the two silently kept.</p>
 <hr />
-<p><em>Evidence packs client-intake-v1 and client-intake-v2. Each numbered item maps to this page's
-claim ledger; items marked as judgment are inferences, not measurements.</em></p></main>
+<p><em>Evidence pack hubspot-native-intake-v1, two independent runs on 2026-08-22 and 2026-08-23,
+verified through the HubSpot API and the receiving inbox. Case by case results, limitations and
+artifact list on the <a href="/evidence-hubspot-native-intake-v1/">evidence record</a>. Material statements
+map to this page's claim ledger; anything untested is labeled.</em></p></main>
 <footer><div class="wrap"><p>Workflow Test Lab. Every recommendation on this site is based on our own documented testing; each page names its test date, the plans used, and its evidence pack. Pages that contain advertising (affiliate) links say so at the top and mark each such link next to the link.</p>
 <p>No tracking cookies, no analytics scripts, no third-party embeds. The cost calculator runs entirely in your browser. Operated from Finland. &copy; 2026</p>
 <p><a href="/about/">About and methodology</a> &middot; <a href="/disclosure-and-privacy/">Advertising disclosure and privacy</a> &middot; Contact: hello@workflowtestlab.com</p></div></footer>

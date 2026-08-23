@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>About Workflow Test Lab: who runs it, how we test, and how the site makes money | Workflow Test Lab</title><meta name="description" content="About Workflow Test Lab: who runs it, how we test, and how the site makes money (tested 2026-08-21)">
+<title>HubSpot's free form, or a form plus automation stack: what the tests say | Workflow Test Lab</title><meta name="description" content="HubSpot's free form, or a form plus automation stack: what the tests say (tested 2026-08-23)">
 <meta name='impact-site-verification' value='68243723-46ca-4e30-aaf0-d4f93802c4c2'>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231d5bbf'/%3E%3Ctext x='16' y='22' font-family='system-ui,sans-serif' font-size='18' font-weight='800' text-anchor='middle' fill='white'%3EW%3C/text%3E%3C/svg%3E">
 <style>
@@ -68,67 +68,130 @@ footer .wrap{padding:22px 22px 48px} footer p{max-width:none}
 @media print{header nav,footer{display:none} body{font-size:12pt} .runlog .row{animation:none;opacity:1}}
 </style></head><body>
 <header><div class="wrap"><a class="brand" href="/">Workflow Test <span>Lab</span></a><nav><a href="/">Home</a><a href="/tested-client-intake-workflow/">Tested workflow</a><a href="/tested-hubspot-native-intake/">Tested workflow</a><a href="/what-breaks-client-intake/">What breaks</a><a href="/intake-workflow-template/">Template</a><a href="/hubspot-native-vs-stack/">Who should skip it</a><a href="/who-should-not-use-this-stack/">Who should skip it</a><a href="/tools/intake-cost-calculator.html">Cost calculator</a></nav><div class="tag">real accounts / measured in operations / broken on purpose / published with evidence</div></div></header>
-<main class="wrap"><h1>About Workflow Test Lab: who runs it, how we test, and how the site makes money</h1><div class="strip"><span>site page</span><span>updated <b>2026-08-21</b></span></div>
-<p><strong>Updated 2026-08-21.</strong> This page describes the lab itself. Every other page on the site is
-about a workflow we tested; this one is about how those pages come to exist.</p>
-<h2>What the site is</h2>
-<p>Workflow Test Lab publishes small-business automation workflows that we have built, run, and
-deliberately broken on real accounts before recommending anything. The first subject is client
-intake for solo consultants and 1-5 person agencies: a form submission that becomes a CRM record
-and an acknowledgement email, on the free plans of Tally, Make, HubSpot and Brevo.</p>
-<p>Each published workflow comes with the same set of pages: the tested workflow itself, what broke
-and which fixes we tested, the exported scenario you can import, and who should not use the stack
-at all. The cost calculator is built from the same measurements.</p>
-<h2>Who runs it</h2>
-<p>The site is run by Tuomas Talka, an independent operator based in Finland. It is a small,
-one-person operation, not an agency or a software vendor, and it has no commercial relationship
-with any of the tools it tests beyond the affiliate programs listed on the
-<a href="/disclosure-and-privacy/">disclosure page</a>.</p>
-<p>We use AI tooling in the lab. Claude (Anthropic) builds and runs test scenarios, collects the API
-evidence, and drafts pages under Tuomas's direction. Before a page is queued for approval, a
-second AI model from a different vendor (OpenAI GPT) audits the draft against the evidence files
-and flags unsupported statements, which are then fixed; this step is written into our publishing
-rules. Tuomas reads the rendered page and approves it before it is published. The build system
-publishes only pages that have an approval file pinned to the approved version of the text; an
-edited page drops back to draft until it is approved again. We say this here because a site about
-testing things honestly should be honest about how it is made.</p>
-<h2>How we test</h2>
-<ul>
-<li><strong>Real accounts, real plans.</strong> Every workflow runs on accounts we created for the lab, on the
-  plan named on the page (free tiers so far). We do not test in sandboxes or from vendor demos.</li>
-<li><strong>Scripted cases, every observation counted.</strong> Each workflow gets a written test matrix (new lead,
-  duplicate, special characters, concurrent submissions, forced failures). The first workflow
-  was run in two full rounds on 2026-08-16; later changes were tested on 2026-08-20 and
-  2026-08-21. When something was observed only once, the page says "observed once".</li>
-<li><strong>Broken on purpose.</strong> We provoke failures (a wrong API path, a duplicate race, an invalid
-  field) to see what the tools do, and publish the failure modes before the fixes.</li>
-<li><strong>Machine-readable evidence.</strong> Results are verified through the tools' own APIs where
-  possible: execution IDs and operation counts from Make, records from HubSpot, message IDs from
-  the receiving inbox. Screenshots are kept for the form-submission steps.</li>
-<li><strong>Claim ledgers.</strong> Every material statement on a workflow, template, decision or tool page maps
-  to a ledger entry that names its support: observed in our test, taken from a dated vendor document, or an inference labelled as
-  such. Vendor facts carry a "checked on" date and a refresh date.</li>
-<li><strong>Limits stated on the page.</strong> What we did not test is listed on each page, not hidden in a
-  footnote.</li>
-</ul>
-<h2>What we do not do</h2>
-<p>We do not accept payment for placement, sponsored reviews, or vendor-supplied test results. We
-do not publish a recommendation before the workflow has passed its test matrix. We do not remove
-negative findings at a vendor's request; if a vendor disputes a finding, we re-test and publish
-the re-test.</p>
-<h2>How the site makes money</h2>
-<p>Through affiliate links, and only inside content that tested the product in question. Each page
-that carries such links says so at the top and marks each link next to the link. At the time of
-writing (2026-08-21) we have no active affiliate partnerships, so all product links are plain
-links. Where an application to a program is pending, no links are placed until it is approved.
-The <a href="/disclosure-and-privacy/">disclosure and privacy page</a> has the details.</p>
-<h2>Contact</h2>
-<p>Operator: Tuomas Talka, Finland. Email: hello@workflowtestlab.com. Corrections and re-test
-requests are welcome; tell us which page and which statement, and we will check it against the
-evidence and answer.</p>
+<main class="wrap"><blockquote>
+<p><strong>Advertising disclosure:</strong> this page contains no advertising (affiliate) links. If we add any,
+each will be marked next to the link and this notice will be updated. Where we rely on vendor
+documentation or have not tested something, the text says so.</p>
+</blockquote>
+<h1>HubSpot's free form, or a form plus automation stack: what the tests say</h1><div class="strip"><span>type <b>who should skip it</b></span><span>tested <b>2026-08-23</b></span><span>evidence <b>hubspot-native-intake-v1 + client-intake-v1 + client-intake-v2</b></span><span><a href="/evidence-client-intake-v1/">see the run record</a></span><span class="ok">status approved for publication</span></div>
+<p><strong>Both sides of this comparison were built and tested on real free tier accounts, on
+2026-08-16, 2026-08-20, 2026-08-21, 2026-08-22 and 2026-08-23.</strong> On one side, HubSpot Free's own
+form with nothing attached (<a href="/tested-hubspot-native-intake/">what it does</a>). On the other, the
+stack we tested first: a Tally form, Make as the automation layer, HubSpot Free as the CRM, and
+Brevo for the acknowledgement email
+(<a href="/tested-client-intake-workflow/">what it does</a>, <a href="/what-breaks-client-intake/">how it breaks</a>).</p>
+<p>We built the stack first and the native form second, which is the honest order to admit: the
+result below is not the one that sells the most tooling.</p>
+<h2>The measured difference</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>HubSpot Free form alone</th>
+<th>Tally, Make, HubSpot Free, Brevo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Contact created from a submission</td>
+<td>yes, 1.03 s and 1.18 s measured (2 runs)</td>
+<td>yes; we did not measure the latency in the stack rounds</td>
+</tr>
+<tr>
+<td>All form fields on the record</td>
+<td>yes, all six (2 runs)</td>
+<td>yes for the fields the scenario maps (name, email, company); the other three are not written to the contact</td>
+</tr>
+<tr>
+<td>Deal created in a pipeline</td>
+<td>no (0 deals in 2 runs)</td>
+<td>yes, plus the contact link, which needed one extra API call</td>
+</tr>
+<tr>
+<td>Acknowledgement email to the lead</td>
+<td>not configured by us; see the qualification below</td>
+<td>yes, delivered to the inbox in every healthy run</td>
+</tr>
+<tr>
+<td>Notification to you</td>
+<td>yes, one email per accepted submission</td>
+<td>yes, when you add one; our alerts go out on failures</td>
+</tr>
+<tr>
+<td>Repeat submission of the same email</td>
+<td>updates the same contact (2 runs)</td>
+<td>updates the contact, no second record (2 rounds)</td>
+</tr>
+<tr>
+<td>Two submissions a fraction of a second apart</td>
+<td>one contact, two notifications, counter reads 1 (2 runs)</td>
+<td>one observed race at 29 ms: one contact, one acknowledgement, one alert, after we added error handlers (observed once)</td>
+</tr>
+<tr>
+<td>Monthly volume limit</td>
+<td>no automation budget to size; we did not test HubSpot's own form volume limits</td>
+<td>about 166 new leads on Make Free's 1,000 credits (6 credits per new lead, measured)</td>
+</tr>
+<tr>
+<td>Cost</td>
+<td>0 EUR</td>
+<td>0 EUR up to that cap, then Make Core at 9 USD a month (checked 2026-08-20)</td>
+</tr>
+<tr>
+<td>Things that can break (observed)</td>
+<td>silent drop of submissions whose user agent said HeadlessChrome; a near simultaneous duplicate counted as one submission on the record</td>
+<td>an unhandled error switched the whole scenario off; a broken step left records in place while the acknowledgement never went out; a duplicate race produced a failed run</td>
+</tr>
+<tr>
+<td>Setup time (one operator, our build logs)</td>
+<td>minutes, in the HubSpot UI</td>
+<td>about an hour, plus the fixes we documented</td>
+</tr>
+</tbody>
+</table>
+<h2>The fork, in one paragraph</h2>
+<p>If you need a deal record per intake, or an automatic reply to the lead, the free form alone did
+not produce either in our tests, and the stack did. If you do not need those two things, the free
+form matched the stack on everything else we measured (contact creation, all fields, repeat
+submissions, special characters, validation, operator notification), with no scenario to
+deactivate and no operations budget to size. That is the whole decision. Our tests do not measure overall
+reliability on either side; what they show is that the failure modes differ in kind. The stack adds
+a layer that can stop, and the native form has its own quiet edges, listed in the table.</p>
+<h2>The qualification we owe you on the acknowledgement email</h2>
+<p>HubSpot Free does include one simple workflow per form, "Send an email after form submission"
+(HubSpot documentation captured 2026-08-21, and the option was present in our editor). We did not
+test it, because the email is a marketing email that reaches only contacts marked as marketing
+contacts, and because saving it requires an email footer with a physical postal address, which this
+lab does not publish. So the row above says "not configured by us", not "not possible". If you have
+a business address you are happy to put in an email footer, that path may close the biggest gap in
+this comparison, and you should test it before adding an automation tool for that reason alone.</p>
+<h2>Where each side surprised us</h2>
+<p><strong>The native form was stricter than we expected.</strong> It blocked a malformed address and an empty
+required field before creating anything, and it silently dropped submissions from a browser whose
+user agent said "HeadlessChrome" while showing the normal success page. The stack accepted the
+same automated submissions without filtering. This matters for anyone monitoring their own form
+with a script, and we wrote up the detail
+<a href="/tested-hubspot-native-intake/">on the native form page</a>.</p>
+<p><strong>The stack failed in ways the CRM cannot see.</strong> A broken step left a contact and a deal in place
+while the acknowledgement never went out, and an unhandled error switched the scenario off so later
+submissions queued up. We tested fixes for both and they worked in the cases we ran, each observed
+once, but they are work you own forever.</p>
+<p><strong>Counting is imperfect on both sides.</strong> On the native form, two near simultaneous submissions
+produced two notifications but a submission counter reading 1, in both runs. On the stack, the one
+race we observed produced one contact and one alert, with the duplicate's data dropped rather than
+merged.</p>
+<h2>What we would tell a solo consultant</h2>
+<p>Start with the free form if your intake is "capture the person and their answers, and I will reply
+myself". Add an automation layer when you can name the thing it must do that the form cannot: a
+deal per intake, an acknowledgement you control, routing, enrichment, or a second system to update.
+When you do add it, add error handling in the same sitting, because our tests say the failure modes
+show up on day one, not in month six.</p>
 <hr />
-<p><em>Site built with a static generator from Markdown files; no cookies, no analytics, no third-party
-scripts. Hosted on GitHub Pages.</em></p></main>
+<p><em>Evidence packs: hubspot-native-intake-v1 (2 runs, 2026-08-22 and 2026-08-23) and client-intake-v1
+and v2 (2026-08-16 to 2026-08-23). Public run records:
+<a href="/evidence-hubspot-native-intake-v1/">native form</a>, <a href="/evidence-client-intake-v1/">the stack</a> and
+<a href="/evidence-client-intake-v2/">its error handling</a>. Material statements map to this page's claim
+ledger; single observations and untested paths are labeled.</em></p></main>
 <footer><div class="wrap"><p>Workflow Test Lab. Every recommendation on this site is based on our own documented testing; each page names its test date, the plans used, and its evidence pack. Pages that contain advertising (affiliate) links say so at the top and mark each such link next to the link.</p>
 <p>No tracking cookies, no analytics scripts, no third-party embeds. The cost calculator runs entirely in your browser. Operated from Finland. &copy; 2026</p>
 <p><a href="/about/">About and methodology</a> &middot; <a href="/disclosure-and-privacy/">Advertising disclosure and privacy</a> &middot; Contact: hello@workflowtestlab.com</p></div></footer>
