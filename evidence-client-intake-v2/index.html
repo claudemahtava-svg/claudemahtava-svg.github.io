@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Evidence record: error handling and alerts for the client-intake chain (v2, v2.1, v2.2) | Workflow Test Lab</title><meta name="description" content="Evidence record: error handling and alerts for the client-intake chain (v2, v2.1, v2.2) (tested 2026-08-20)">
+<meta name='impact-site-verification' value='68243723-46ca-4e30-aaf0-d4f93802c4c2'>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231d5bbf'/%3E%3Ctext x='16' y='22' font-family='system-ui,sans-serif' font-size='18' font-weight='800' text-anchor='middle' fill='white'%3EW%3C/text%3E%3C/svg%3E">
+<style>
+:root{--paper:#f7f8f6;--ink:#171c22;--ink-2:#4b5560;--hair:#d9ddd8;--petrol:#0f4c5c;--petrol-ink:#0a3540;--amber:#b9770e;--amber-bg:#fff4df;--ok:#1f7a4d;--card:#ffffff;--mono:ui-monospace,"Cascadia Mono","SF Mono",Menlo,Consolas,monospace;--sans:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif}
+@media (prefers-color-scheme:dark){:root{--paper:#0f1317;--ink:#e7eae6;--ink-2:#a9b2b9;--hair:#2a3138;--petrol:#7fc4d6;--petrol-ink:#b7e0ea;--amber:#e3a640;--amber-bg:#2a2210;--ok:#6fcf97;--card:#151b21}}
+*{box-sizing:border-box}
+html{font-size:17px}
+body{margin:0;font-family:var(--sans);background:var(--paper);color:var(--ink);line-height:1.65;-webkit-font-smoothing:antialiased}
+a{color:var(--petrol)} a:hover{color:var(--petrol-ink)}
+:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+.wrap{max-width:780px;margin:0 auto;padding:0 22px}
+header{border-bottom:1px solid var(--hair);background:var(--paper)}
+header .wrap{display:flex;flex-wrap:wrap;align-items:center;gap:10px 20px;padding:16px 22px}
+header a.brand{font-weight:800;letter-spacing:-.02em;text-decoration:none;color:var(--ink);font-size:1.05rem}
+header a.brand span{color:var(--petrol)}
+header .tag{font-family:var(--mono);font-size:.74rem;color:var(--ink-2);flex-basis:100%;letter-spacing:.02em}
+nav{display:flex;flex-wrap:wrap;gap:6px 4px;margin-left:auto}
+nav a{color:var(--ink);text-decoration:none;font-size:.86rem;padding:5px 11px;border:1px solid var(--hair);border-radius:999px;background:var(--card)}
+nav a:hover{border-color:var(--petrol);color:var(--petrol)}
+main.wrap{padding:40px 22px 72px}
+h1{font-size:2.05rem;line-height:1.15;letter-spacing:-.022em;margin:.1em 0 .55em;font-weight:800}
+h2{font-size:1.3rem;line-height:1.3;margin:2.1em 0 .6em;padding-top:.7em;border-top:1px solid var(--hair);letter-spacing:-.01em}
+h3{font-size:1.05rem;margin:1.4em 0 .4em}
+p,li{max-width:68ch}
+.strip{display:flex;flex-wrap:wrap;gap:6px 18px;font-family:var(--mono);font-size:.76rem;color:var(--ink-2);margin:0 0 1.6em;padding:10px 0;border-top:1px solid var(--hair);border-bottom:1px solid var(--hair);letter-spacing:.01em}
+.strip b{color:var(--ink);font-weight:600}
+.strip .ok{color:var(--ok)}
+blockquote{border-left:3px solid var(--amber);margin:18px 0 26px;padding:12px 16px;background:var(--amber-bg);border-radius:0 8px 8px 0;font-size:.93rem}
+blockquote p{margin:0;max-width:none}
+table{border-collapse:collapse;width:100%;font-size:.92rem;display:block;overflow-x:auto;margin:14px 0 24px}
+th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--hair);vertical-align:top}
+th{font-family:var(--mono);font-size:.76rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--ink-2);background:transparent}
+td code{white-space:nowrap}
+code{font-family:var(--mono);background:var(--card);border:1px solid var(--hair);padding:1px 6px;border-radius:5px;font-size:.88em}
+pre{font-family:var(--mono);background:var(--card);border:1px solid var(--hair);padding:12px 14px;border-radius:8px;overflow-x:auto;font-size:.86rem}
+pre code{border:0;background:none;padding:0}
+img{max-width:100%;height:auto;border:1px solid var(--hair);border-radius:8px;margin:8px 0 16px;background:#fff}
+hr{border:0;border-top:1px solid var(--hair);margin:2em 0}
+ol li,ul li{margin:.35em 0}
+footer{border-top:1px solid var(--hair);color:var(--ink-2);font-size:.85rem}
+footer .wrap{padding:22px 22px 48px} footer p{max-width:none}
+.meta{color:var(--ink-2);font-size:.9rem}
+.lead{font-size:1.1rem;color:var(--ink-2);max-width:58ch;margin-top:0}
+/* home: run record (signature) */
+.runlog{margin:30px 0 36px;border:1px solid var(--hair);border-radius:10px;background:var(--card);overflow:hidden}
+.runlog .head{display:flex;justify-content:space-between;gap:12px;padding:10px 14px;border-bottom:1px solid var(--hair);font-family:var(--mono);font-size:.74rem;color:var(--ink-2);letter-spacing:.04em;text-transform:uppercase}
+.runlog .row{display:grid;grid-template-columns:1.2fr 2fr .8fr auto;gap:12px;align-items:baseline;padding:10px 14px;border-bottom:1px solid var(--hair);font-family:var(--mono);font-size:.84rem;opacity:0;transform:translateY(4px);animation:rowin .5s ease forwards}
+.runlog .row:last-child{border-bottom:0}
+.runlog .row:nth-child(2){animation-delay:.05s}.runlog .row:nth-child(3){animation-delay:.15s}.runlog .row:nth-child(4){animation-delay:.25s}.runlog .row:nth-child(5){animation-delay:.35s}.runlog .row:nth-child(6){animation-delay:.45s}.runlog .row:nth-child(7){animation-delay:.55s}
+.runlog .what{font-family:var(--sans);color:var(--ink)}
+.runlog .n{font-weight:700;color:var(--ink);text-align:right}
+.runlog .st{font-size:.72rem;padding:2px 8px;border-radius:999px;border:1px solid var(--hair)}
+.runlog .st.ok{color:var(--ok);border-color:color-mix(in srgb,var(--ok) 45%,transparent)}
+.runlog .st.warn{color:var(--amber);border-color:color-mix(in srgb,var(--amber) 55%,transparent)}
+@keyframes rowin{to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.runlog .row{animation:none;opacity:1;transform:none}}
+@media (max-width:560px){.runlog .row{grid-template-columns:1fr auto;gap:4px 12px}.runlog .what{grid-column:1/-1}}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-top:22px}
+.card{border:1px solid var(--hair);border-radius:10px;padding:16px;background:var(--card);display:flex;flex-direction:column;gap:6px}
+.card .kind{font-family:var(--mono);font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-2)}
+.card a{color:var(--ink);text-decoration:none;font-weight:700;line-height:1.35}
+.card a:hover{color:var(--petrol)}
+.card .meta{font-family:var(--mono);font-size:.74rem}
+.preview-banner{background:#ffe9b3;color:#4a3300;padding:8px 14px;font-weight:600;text-align:center}
+@media print{header nav,footer{display:none} body{font-size:12pt} .runlog .row{animation:none;opacity:1}}
+</style></head><body>
+<header><div class="wrap"><a class="brand" href="/">Workflow Test <span>Lab</span></a><nav><a href="/">Home</a><a href="/tested-client-intake-workflow/">Tested workflow</a><a href="/what-breaks-client-intake/">What breaks</a><a href="/intake-workflow-template/">Template</a><a href="/who-should-not-use-this-stack/">Who should skip it</a><a href="/tools/intake-cost-calculator.html">Cost calculator</a></nav><div class="tag">real accounts / measured in operations / broken on purpose / published with evidence</div></div></header>
+<main class="wrap"><h1>Evidence record: error handling and alerts for the client-intake chain (v2, v2.1, v2.2)</h1><div class="strip"><span>run record</span><span>pack <b>client-intake-v2</b></span><span>tested <b>2026-08-20</b></span></div>
+<p><strong>This page is the run record behind our published recommendations.</strong> It lists what we
+tested, when, what we observed case by case, and what we did not test. It is generated from
+the pack file in our repository, so it cannot quietly drift from the source. Identifiers
+that would expose our accounts (record ids, run ids, message ids, addresses) are left out on
+purpose; the underlying files are available on request.</p>
+<h2>The question this pack answers</h2>
+<p>When a step in a free-tier intake automation fails, can the workflow be made to keep running, tell the operator what happened, and still acknowledge the lead?</p>
+<h2>What was tested, and when</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pack</td>
+<td><code>client-intake-v2</code></td>
+</tr>
+<tr>
+<td>First tested</td>
+<td>2026-08-20</td>
+</tr>
+<tr>
+<td>Runs</td>
+<td>one round per case for v2 (2026-08-20), one round per handler for the enriched alert text (2026-08-21), one healthy run for the authenticated sender domain (2026-08-22)</td>
+</tr>
+<tr>
+<td>Status</td>
+<td>passed</td>
+</tr>
+<tr>
+<td>Pages built on it</td>
+<td><a href="/what-breaks-client-intake/">what-breaks-client-intake</a>, <a href="/intake-workflow-template/">intake-workflow-template</a></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Stack and plans</strong></p>
+<ul>
+<li>Form: Tally, free plan</li>
+<li>Automation: Make, free plan</li>
+<li>CRM: HubSpot Free CRM, EU data centre</li>
+<li>Acknowledgement and alert email: Brevo, free plan</li>
+</ul>
+<h2>How we tested</h2>
+<p>The scenario was edited through the automation platform's API, then exercised with scripted browser submissions against the live form. Failures were induced on purpose in a controlled window and reverted immediately afterwards. Each run was checked in the run history for status and operation count, in the CRM for the records, and in the receiving mailbox for the alert and the acknowledgement. Header authentication results were read from the delivered message.</p>
+<h2>Cases</h2>
+<table>
+<thead>
+<tr>
+<th>Case</th>
+<th>Input</th>
+<th>What we observed</th>
+<th>Ops</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>healthy run with handlers attached</td>
+<td>new lead</td>
+<td>full chain completed, acknowledgement delivered</td>
+<td>6</td>
+<td>confirmed</td>
+</tr>
+<tr>
+<td>association step failing, handler with the Resume directive (continue the run)</td>
+<td>association call made invalid on purpose, one submission</td>
+<td>contact and deal created, association rejected, alert email delivered to the operator, run continued and the lead still received the acknowledgement, run ended as success, scenario stayed active</td>
+<td>7</td>
+<td>confirmed (repeated on 2026-08-21 with the enriched alert text)</td>
+</tr>
+<tr>
+<td>two submissions of the same new address 29 milliseconds apart</td>
+<td>concurrent duplicate</td>
+<td>the search missed the just-created contact, the second create was rejected, the handler sent one alert and ended that run cleanly; one contact, one deal, one acknowledgement, one alert</td>
+<td>4 for the handled run</td>
+<td>confirmed (once)</td>
+</tr>
+<tr>
+<td>duplicate 2.1 seconds after the original</td>
+<td>same address, slower spacing</td>
+<td>the search found the existing contact and the run took the update path</td>
+<td>3</td>
+<td>confirmed (once)</td>
+</tr>
+<tr>
+<td>create-contact step failing, handler with the Ignore directive (drop that submission, keep the scenario running)</td>
+<td>an invalid property added on purpose, one submission</td>
+<td>no contact, no deal, no acknowledgement for that submission, alert email delivered naming the failed step and the platform error text, scenario stayed active</td>
+<td>4</td>
+<td>confirmed (once, with the enriched alert text)</td>
+</tr>
+<tr>
+<td>acknowledgement from the authenticated sender domain</td>
+<td>new lead after the sender domain was authenticated</td>
+<td>acknowledgement delivered from the lab's own domain; the receiving provider reported DKIM, SPF and DMARC as passing; no rewriting to the mail provider's shared domain</td>
+<td>6</td>
+<td>confirmed (once)</td>
+</tr>
+</tbody>
+</table>
+<p>"Confirmed" means the outcome held in every round we ran that case, which for several cases
+is a single round. Where a case was seen once, the status column says so, and every page that
+cites it says "observed once". We do not treat one observation as a pattern.</p>
+<h2>What the pack establishes</h2>
+<ul>
+<li>Handled errors do not increase the scenario error counter and do not switch the scenario off.</li>
+<li>The Resume directive keeps the lead acknowledged when a later step fails, and leaves the deal unlinked.</li>
+<li>The Ignore directive drops that submission cleanly; the existing record is not updated from it.</li>
+<li>The alert email can carry the scenario name, the failed step, the platform error text, the run identifier, a link to that run, every form field, and the created record identifiers.</li>
+<li>Directives themselves are not billed; the alert email costs one credit.</li>
+<li>An authenticated sender domain removes the shared-domain rewrite seen in v1 (observed once, 2026-08-22). Our template page still describes the earlier unauthenticated behaviour; that update is queued and not yet published.</li>
+</ul>
+<h2>What it does not establish</h2>
+<ul>
+<li>Most cases were observed once. The association-failure case was observed twice (once in the base version and again with the enriched alert text), and the healthy path three times. Every page that cites a single observation says so.</li>
+<li>The create-contact failure was induced with an invalid property, not by a real duplicate race.</li>
+<li>The run link in the alert was read in the delivered message; it was not opened from a signed-in browser during the test.</li>
+<li>A literal equals sign followed by two hexadecimal digits in the alert body was mangled in transport once; the final text avoids equals signs.</li>
+<li>The transactional acknowledgement still carries the mail provider's open-tracking pixel and an unsubscribe header; turning that off is queued.</li>
+</ul>
+<h2>Artifacts</h2>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>What it is</th>
+<th>SHA-256</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="/downloads/client-intake-v2.blueprint.json">client-intake-v2.blueprint.json</a></td>
+<td>Exported scenario with error handlers (sanitised)</td>
+<td><code>28c9d367e1f6911bccb86044c5e456eb6a861659c923ba37195145c1cdc05cc4</code></td>
+</tr>
+<tr>
+<td><a href="/downloads/client-intake-v2.1.blueprint.json">client-intake-v2.1.blueprint.json</a></td>
+<td>Exported scenario with enriched alert emails (sanitised, recommended)</td>
+<td><code>823c1cde840d758008aca4f7e4d2fb29e61c0bfcca7fc9412af04b040394ff30</code></td>
+</tr>
+<tr>
+<td>test-log.md</td>
+<td>Run log for v2 (not published; available on request)</td>
+<td>not published</td>
+</tr>
+<tr>
+<td>test-log-v2.1.md</td>
+<td>Run log for the alert extension and the sender-domain change (not published; available on request)</td>
+<td>not published</td>
+</tr>
+</tbody>
+</table>
+<h2>Changelog</h2>
+<ul>
+<li>2026-08-20: v2 tested (error handlers, exact-match search) and used to update two approved pages.</li>
+<li>2026-08-21: v2.1 tested (alert emails carrying the platform error text, the run identifier and the lead fields); pages re-approved.</li>
+<li>2026-08-22: v2.2 tested (acknowledgement and alerts sent from the lab's authenticated domain). Page wording update is queued and not yet published.</li>
+</ul>
+<hr />
+<p><em>Corrections are welcome: hello@workflowtestlab.com. If you believe a result here is wrong,
+tell us which case and we will re-test and publish the re-test with its date.</em></p></main>
+<footer><div class="wrap"><p>Workflow Test Lab. Every recommendation on this site is based on our own documented testing; each page names its test date, the plans used, and its evidence pack. Pages that contain advertising (affiliate) links say so at the top and mark each such link next to the link.</p>
+<p>No tracking cookies, no analytics scripts, no third-party embeds. The cost calculator runs entirely in your browser. Operated from Finland. &copy; 2026</p>
+<p><a href="/about/">About and methodology</a> &middot; <a href="/disclosure-and-privacy/">Advertising disclosure and privacy</a> &middot; Contact: hello@workflowtestlab.com</p></div></footer>
+</body></html>
