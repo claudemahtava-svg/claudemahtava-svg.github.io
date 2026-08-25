@@ -166,9 +166,9 @@ purpose; the underlying files are available on request.</p>
 <tr>
 <td>two submissions of the same new address a fraction of a second apart</td>
 <td>parallel submissions, 106 milliseconds apart in run 1 and 235 milliseconds in run 2</td>
-<td>exactly one contact in both runs, and two notification emails in both runs (one new submission, one reconversion), while the contact's own submission counter read one rather than two; the run 1 counter still read one about twenty hours later, so this is not indexing delay. In both runs the later-arriving submission supplied the stored field values    status: confirmed (both runs); the counter behaviour is the finding, and the later arrival won both times</td>
+<td>exactly one contact in both runs, and two notification emails in both runs (one new submission, one reconversion), while the contact's own submission counter read one rather than two; the run 1 counter still read one about twenty hours later, so this is not indexing delay. In both runs the later-arriving submission supplied the stored field values</td>
 <td>n/a</td>
-<td></td>
+<td>confirmed (both runs); the counter behaviour is the finding, and the later arrival won both times</td>
 </tr>
 <tr>
 <td>deals</td>
@@ -192,16 +192,19 @@ cites it says "observed once". We do not treat one observation as a pattern.</p>
 <h2>What the pack establishes</h2>
 <ul>
 <li>The free form creates and updates contacts by email address without any automation layer, and keeps all form fields.</li>
-<li>It creates no deal. The vendor documents record creation as a workflow action for paid users.  - It notifies the operator on every accepted submission, as a new submission or a reconversion. Submissions it drops silently produce no notification.</li>
+<li>It creates no deal. The vendor documents record creation as a workflow action for paid users.</li>
+<li>It notifies the operator on every accepted submission, as a new submission or a reconversion. Submissions it drops silently produce no notification.</li>
 <li>It blocks a malformed address and an empty required field before anything is created.</li>
 <li>Two near-simultaneous submissions produce one contact and two notifications, but the contact's submission counter shows one. Counting intake from the record alone can undercount.</li>
-<li>Submissions from a browser identifying itself as headless were accepted on screen and dropped silently. This is a note for anyone monitoring their own form with a script, not evidence about ordinary visitors.  - No automation operations are consumed, because there is no automation layer. We did not test whether the CRM itself imposes a form-submission volume limit.</li>
+<li>Submissions from a browser identifying itself as headless were accepted on screen and dropped silently. This is a note for anyone monitoring their own form with a script, not evidence about ordinary visitors.</li>
+<li>No automation operations are consumed, because there is no automation layer. We did not test whether the CRM itself imposes a form-submission volume limit.</li>
 </ul>
 <h2>What it does not establish</h2>
 <ul>
 <li>The lead receives no acknowledgement in this pack because we did not configure one. The free plan does offer one send-email workflow per form, but it is a marketing email restricted to marketing contacts and saving it requires an email footer with a physical postal address, which this lab does not publish. That is our constraint, not a product limit, and every page that mentions it says so.</li>
 <li>We did not test whether an ordinary visitor's browser can be filtered, and we did not read the vendor's own submissions or spam views to see whether the dropped submissions were recorded there.</li>
-<li>The ordinary-browser control was observed once.  - The later-arriving submission won both times, but server-side processing order was not measured, so treat it as an observation rather than a rule.</li>
+<li>The ordinary-browser control was observed once.</li>
+<li>The later-arriving submission won both times, but server-side processing order was not measured, so treat it as an observation rather than a rule.</li>
 <li>The synthetic test contacts had not been deleted when this record was generated; the connector we use has no delete action, so removal is a manual step and will be recorded in the run log.</li>
 </ul>
 <h2>Artifacts</h2>
