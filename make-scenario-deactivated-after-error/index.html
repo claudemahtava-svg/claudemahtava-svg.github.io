@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Make scenario deactivated after an error: why, and the fix we tested</title>
+<meta name="description" content="Make switches a webhook scenario off on the first unhandled error. What happens to queued submissions, the error-handler fix we tested, and what it does not repair.">
+<link rel="canonical" href="https://workflowtestlab.com/make-scenario-deactivated-after-error/">
+<meta property="og:type" content="article"><meta property="og:site_name" content="Workflow Test Lab">
+<meta property="og:title" content="Make scenario deactivated after an error: why, and the fix we tested"><meta property="og:description" content="Make switches a webhook scenario off on the first unhandled error. What happens to queued submissions, the error-handler fix we tested, and what it does not repair.">
+<meta property="og:url" content="https://workflowtestlab.com/make-scenario-deactivated-after-error/">
+<meta name="twitter:card" content="summary"><meta name="twitter:title" content="Make scenario deactivated after an error: why, and the fix we tested">
+<meta name="twitter:description" content="Make switches a webhook scenario off on the first unhandled error. What happens to queued submissions, the error-handler fix we tested, and what it does not repair.">
+<meta name='impact-site-verification' value='68243723-46ca-4e30-aaf0-d4f93802c4c2'>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Make scenario deactivated after an error: why, and the fix we tested", "description": "Make switches a webhook scenario off on the first unhandled error. What happens to queued submissions, the error-handler fix we tested, and what it does not repair.", "url": "https://workflowtestlab.com/make-scenario-deactivated-after-error/", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://workflowtestlab.com/make-scenario-deactivated-after-error/"}, "author": {"@type": "Person", "name": "Tuomas Talka"}, "publisher": {"@type": "Organization", "name": "Workflow Test Lab", "url": "https://workflowtestlab.com"}, "isAccessibleForFree": true, "datePublished": "2026-08-21", "dateModified": "2026-08-21"}</script>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231d5bbf'/%3E%3Ctext x='16' y='22' font-family='system-ui,sans-serif' font-size='18' font-weight='800' text-anchor='middle' fill='white'%3EW%3C/text%3E%3C/svg%3E">
+<style>
+:root{--paper:#f7f8f6;--ink:#171c22;--ink-2:#4b5560;--hair:#d9ddd8;--petrol:#0f4c5c;--petrol-ink:#0a3540;--amber:#b9770e;--amber-bg:#fff4df;--ok:#1f7a4d;--card:#ffffff;--mono:ui-monospace,"Cascadia Mono","SF Mono",Menlo,Consolas,monospace;--sans:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif}
+@media (prefers-color-scheme:dark){:root{--paper:#0f1317;--ink:#e7eae6;--ink-2:#a9b2b9;--hair:#2a3138;--petrol:#7fc4d6;--petrol-ink:#b7e0ea;--amber:#e3a640;--amber-bg:#2a2210;--ok:#6fcf97;--card:#151b21}}
+*{box-sizing:border-box}
+html{font-size:17px}
+body{margin:0;font-family:var(--sans);background:var(--paper);color:var(--ink);line-height:1.65;-webkit-font-smoothing:antialiased}
+a{color:var(--petrol)} a:hover{color:var(--petrol-ink)}
+:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+.wrap{max-width:780px;margin:0 auto;padding:0 22px}
+header{border-bottom:1px solid var(--hair);background:var(--paper)}
+header .wrap{display:flex;flex-wrap:wrap;align-items:center;gap:10px 20px;padding:16px 22px}
+header a.brand{font-weight:800;letter-spacing:-.02em;text-decoration:none;color:var(--ink);font-size:1.05rem}
+header a.brand span{color:var(--petrol)}
+header .tag{font-family:var(--mono);font-size:.74rem;color:var(--ink-2);flex-basis:100%;letter-spacing:.02em}
+nav{display:flex;flex-wrap:wrap;gap:6px 4px;margin-left:auto}
+nav a{color:var(--ink);text-decoration:none;font-size:.86rem;padding:5px 11px;border:1px solid var(--hair);border-radius:999px;background:var(--card)}
+nav a:hover{border-color:var(--petrol);color:var(--petrol)}
+main.wrap{padding:40px 22px 72px}
+h1{font-size:2.05rem;line-height:1.15;letter-spacing:-.022em;margin:.1em 0 .55em;font-weight:800}
+h2{font-size:1.3rem;line-height:1.3;margin:2.1em 0 .6em;padding-top:.7em;border-top:1px solid var(--hair);letter-spacing:-.01em}
+h3{font-size:1.05rem;margin:1.4em 0 .4em}
+p,li{max-width:68ch}
+.strip{display:flex;flex-wrap:wrap;gap:6px 18px;font-family:var(--mono);font-size:.76rem;color:var(--ink-2);margin:0 0 1.6em;padding:10px 0;border-top:1px solid var(--hair);border-bottom:1px solid var(--hair);letter-spacing:.01em}
+.strip b{color:var(--ink);font-weight:600}
+.strip .ok{color:var(--ok)}
+blockquote{border-left:3px solid var(--amber);margin:18px 0 26px;padding:12px 16px;background:var(--amber-bg);border-radius:0 8px 8px 0;font-size:.93rem}
+blockquote p{margin:0;max-width:none}
+table{border-collapse:collapse;width:100%;font-size:.92rem;display:block;overflow-x:auto;margin:14px 0 24px}
+th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--hair);vertical-align:top}
+th{font-family:var(--mono);font-size:.76rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--ink-2);background:transparent}
+td code{white-space:nowrap}
+code{font-family:var(--mono);background:var(--card);border:1px solid var(--hair);padding:1px 6px;border-radius:5px;font-size:.88em}
+pre{font-family:var(--mono);background:var(--card);border:1px solid var(--hair);padding:12px 14px;border-radius:8px;overflow-x:auto;font-size:.86rem}
+pre code{border:0;background:none;padding:0}
+img{max-width:100%;height:auto;border:1px solid var(--hair);border-radius:8px;margin:8px 0 16px;background:#fff}
+hr{border:0;border-top:1px solid var(--hair);margin:2em 0}
+ol li,ul li{margin:.35em 0}
+footer{border-top:1px solid var(--hair);color:var(--ink-2);font-size:.85rem}
+footer .wrap{padding:22px 22px 48px} footer p{max-width:none}
+.meta{color:var(--ink-2);font-size:.9rem}
+.lead{font-size:1.1rem;color:var(--ink-2);max-width:58ch;margin-top:0}
+/* home: run record (signature) */
+.runlog{margin:30px 0 36px;border:1px solid var(--hair);border-radius:10px;background:var(--card);overflow:hidden}
+.runlog .head{display:flex;justify-content:space-between;gap:12px;padding:10px 14px;border-bottom:1px solid var(--hair);font-family:var(--mono);font-size:.74rem;color:var(--ink-2);letter-spacing:.04em;text-transform:uppercase}
+.runlog .row{display:grid;grid-template-columns:1.2fr 2fr .8fr auto;gap:12px;align-items:baseline;padding:10px 14px;border-bottom:1px solid var(--hair);font-family:var(--mono);font-size:.84rem;opacity:0;transform:translateY(4px);animation:rowin .5s ease forwards}
+.runlog .row:last-child{border-bottom:0}
+.runlog .row:nth-child(2){animation-delay:.05s}.runlog .row:nth-child(3){animation-delay:.15s}.runlog .row:nth-child(4){animation-delay:.25s}.runlog .row:nth-child(5){animation-delay:.35s}.runlog .row:nth-child(6){animation-delay:.45s}.runlog .row:nth-child(7){animation-delay:.55s}
+.runlog .what{font-family:var(--sans);color:var(--ink)}
+.runlog .n{font-weight:700;color:var(--ink);text-align:right}
+.runlog .st{font-size:.72rem;padding:2px 8px;border-radius:999px;border:1px solid var(--hair)}
+.runlog .st.ok{color:var(--ok);border-color:color-mix(in srgb,var(--ok) 45%,transparent)}
+.runlog .st.warn{color:var(--amber);border-color:color-mix(in srgb,var(--amber) 55%,transparent)}
+@keyframes rowin{to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.runlog .row{animation:none;opacity:1;transform:none}}
+@media (max-width:560px){.runlog .row{grid-template-columns:1fr auto;gap:4px 12px}.runlog .what{grid-column:1/-1}}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-top:22px}
+.card{border:1px solid var(--hair);border-radius:10px;padding:16px;background:var(--card);display:flex;flex-direction:column;gap:6px}
+.card .kind{font-family:var(--mono);font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-2)}
+.card a{color:var(--ink);text-decoration:none;font-weight:700;line-height:1.35}
+.card a:hover{color:var(--petrol)}
+.card .meta{font-family:var(--mono);font-size:.74rem}
+.preview-banner{background:#ffe9b3;color:#4a3300;padding:8px 14px;font-weight:600;text-align:center}
+.readnext{margin-top:36px;padding-top:18px;border-top:1px solid var(--hair)}.readnext h2{font-size:.95rem;letter-spacing:.04em;text-transform:uppercase;color:var(--ink-2)}.readnext ul{list-style:none;padding:0;margin:10px 0 0}.readnext li{margin:7px 0}.readnext a{color:var(--petrol);text-decoration:none;border-bottom:1px solid var(--hair)}.readnext a:hover{border-color:var(--petrol)}.grouphead{margin:26px 0 4px;font-size:.95rem;letter-spacing:.04em;text-transform:uppercase;color:var(--ink-2)}
+@media print{header nav,footer{display:none} body{font-size:12pt} .runlog .row{animation:none;opacity:1}}
+</style></head><body>
+<header><div class="wrap"><a class="brand" href="/">Workflow Test <span>Lab</span></a><nav><a href="/">Home</a><a href="/tested-client-intake-workflow/">Tested workflow</a><a href="/tested-hubspot-native-intake/">Tested workflow</a><a href="/what-breaks-client-intake/">What breaks</a><a href="/intake-workflow-template/">Template</a><a href="/hubspot-native-vs-stack/">Who should skip it</a><a href="/who-should-not-use-this-stack/">Who should skip it</a><a href="/make-scenario-deactivated-after-error/">Troubleshooting</a><a href="/tools/intake-cost-calculator.html">Cost calculator</a></nav><div class="tag">real accounts / measured in operations / broken on purpose / published with evidence</div></div></header>
+<main class="wrap"><blockquote>
+<p><strong>Advertising notice:</strong> this page contains no advertising (affiliate) links; every product link
+here is a plain link. We have one affiliate partnership, with Make since 2026-08-22, and its
+marked links appear on two other pages. The tests below predate that partnership. See
+<a href="/disclosure-and-privacy/">advertising disclosure and privacy</a>.</p>
+</blockquote>
+<h1>Make scenario deactivated after an error: why it happens, and the fix we tested</h1><div class="strip"><span>type <b>troubleshooting</b></span><span>tested <b>2026-08-21</b></span><span>evidence <b>client-intake-v1 + client-intake-v2</b></span><span><a href="/evidence-client-intake-v1/">see the run record</a></span><span class="ok">status approved for publication</span></div>
+<p>If your Make run history shows <strong>"Scenario was deactivated by Make because: scenario has
+encountered an error"</strong>, your scenario is off and nothing downstream is running. We produced this
+message twice on 2026-08-16 with deliberately broken runs of a client-intake scenario on Make
+Free, and then tested the fix: with handlers attached, the same underlying failure no longer
+deactivated anything. This page is what we observed, with dates.</p>
+<h2>Why Make switched it off</h2>
+<p>Make's error-handling documentation (checked 2026-08-20) describes the behaviour we saw:
+a webhook-triggered scenario is disabled immediately on an unhandled error, and a scheduled
+scenario is disabled after three consecutive errored runs. In our test, one invalid API call was
+enough: both deactivations came from the same deliberately broken association URL, the run
+errored, the history row said the scenario had been deactivated, and the scenario's toggle was
+off. Observed twice with identical HubSpot 400 responses; other error causes were not tested.</p>
+<p>The reason it works this way: when no error handler is attached to a module, Make applies its
+Rollback handling by default (same documentation page). Deactivation is the platform protecting
+you from repeating a failing run, not a bug.</p>
+<h2>What happens to submissions while the scenario is off</h2>
+<p>In our test, they were not lost. Four submissions arrived while the scenario was off; the webhook
+queued them. When we reactivated the scenario by hand, all four ran within about one second of
+each other.</p>
+<p>That burst matters. Two of the queued submissions carried the same email address, and because our
+dedupe searched before creating, the second one slipped past the search during the drain and
+failed against the CRM's uniqueness rule, which errored the run again. If your scenario assumes
+submissions arrive spaced out, the reactivation drain is exactly when that assumption breaks. One
+observation; your queue behaviour may differ with other apps.</p>
+<h2>The fix we tested: an error handler on the module that can fail</h2>
+<p>On 2026-08-20 we attached error-handler routes to the two modules that had failed in our tests
+(a CRM create step and a CRM API call), each route ending in a directive:</p>
+<ul>
+<li><strong>Resume</strong> on the API-call step: the run continues past the failure. In our test the lead still
+  received the acknowledgement email, and the run ended as Success.</li>
+<li><strong>Ignore</strong> on the create step: that run ends cleanly without the later steps. Used for the
+  duplicate that slips past a search, where retrying would fail again.</li>
+</ul>
+<p>Each route also sends an alert email before the directive, so a handled failure is loud instead
+of silent. In the version we now run, the alert carries the scenario name and id, the failed
+step, the platform's own error text, the execution id, a link in the format of Make's history
+view, and every field from the submission; the final alert text was observed once per handler,
+and we read the link in the delivered email rather than navigating it. The error text is read
+with the failed module's error bundle, for example a module 12 failure is
+<code>{{12.error.message}}</code>; the generic <code>{{error.message}}</code> resolved to nothing in our tests
+(2026-08-21).</p>
+<p>Results, measured across six provoked failures on 2026-08-20 and 2026-08-21:</p>
+<ul>
+<li>Every handled run ended with status Success and the scenario stayed active. The scenario's
+  error counter read the same before and after (6), and no deactivation event appeared.</li>
+<li>The lead was still acknowledged whenever the failure was in a step after the acknowledgement
+  could be salvaged with Resume.</li>
+<li>Directives themselves consumed no credits; the alert email cost one credit per failure.</li>
+</ul>
+<p>The exact scenario, with the handlers and the enriched alerts, is downloadable on the
+<a href="/intake-workflow-template/">blueprint page</a>. The case by case record is on the
+<a href="/evidence-client-intake-v2/">error-handling run record</a>.</p>
+<h2>What the handler does not repair</h2>
+<p>A handler keeps the scenario alive; it does not finish the failed step's work.</p>
+<ul>
+<li>After <strong>Resume</strong> on our association step, the deal existed but was not linked to its contact.
+  The alert names it; linking it is a manual step.</li>
+<li>After <strong>Ignore</strong> on the create step, that submission's data is dropped, not merged into the
+  existing record (observed once, in the duplicate-race case).</li>
+<li>A handled failure still needs a human to read the alert. Make Free's license lists a 7 day
+  execution-log retention (make.com pricing page, checked 2026-08-20); we did not verify exactly
+  which per-module details survive the week, so read the history soon rather than late.</li>
+</ul>
+<h2>If your scenario is off right now</h2>
+<ol>
+<li>Open the scenario's run history and read the errored run's message before touching anything.</li>
+<li>Expect a burst when you switch it back on: queued submissions drained together in our test.</li>
+<li>Attach an error handler with an alert to the module that failed before reactivating, so the
+   next failure does not repeat the outage.</li>
+<li>If the failed step wrote partial data (a record without its link, in our case), check for it;
+   the run history is the only place that shows which step stopped.</li>
+</ol>
+<p>We provoked our failures in a controlled window where no real submissions were possible. If your
+form is live, do not arm test failures against it.</p>
+<hr />
+<p><em>Evidence packs client-intake-v1 (2026-08-16, deactivation observed twice) and client-intake-v2
+(2026-08-20 and 2026-08-21, handlers and alerts). Public run records:
+<a href="/evidence-client-intake-v1/">v1</a>, <a href="/evidence-client-intake-v2/">v2</a>. Material statements map
+to this page's claim ledger; single observations are labeled.</em></p><nav class="readnext" aria-label="Read next"><h2>Read next</h2><ul><li><a href="/what-breaks-client-intake/">All 7 failure modes of the same workflow, not just this one</a></li><li><a href="/intake-workflow-template/">The blueprint with the handlers and alerts already attached</a></li><li><a href="/evidence-client-intake-v2/">The run record behind the handler results</a></li></ul></nav></main>
+<footer><div class="wrap"><p>Workflow Test Lab. Every recommendation on this site is based on our own documented testing; each page names its test date, the plans used, and its evidence pack. Pages that contain advertising (affiliate) links say so at the top and mark each such link next to the link.</p>
+<p>No tracking cookies, no analytics scripts, no third-party embeds. The cost calculator runs entirely in your browser. Operated from Finland. &copy; 2026</p>
+<p><a href="/about/">About and methodology</a> &middot; <a href="/disclosure-and-privacy/">Advertising disclosure and privacy</a> &middot; Contact: hello@workflowtestlab.com</p></div></footer>
+</body></html>

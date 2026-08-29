@@ -31,6 +31,8 @@
   .wrap { overflow-x:auto; }
   footer { margin-top: 36px; color: var(--muted); font-size: .88rem; }
   .hidden { display:none; }
+.faq dt{font-weight:700;margin-top:14px}
+.faq dd{margin:6px 0 0 0}
 </style>
 </head>
 <body>
@@ -98,6 +100,30 @@
     </tbody>
   </table>
   </div>
+
+  <h2>Common questions about Make Free's 1,000 credits</h2>
+  <dl class="faq">
+    <dt>How many leads does Make Free's 1,000 credits cover in this workflow?</dt>
+    <dd>An estimate from our measured usage: a new lead consumed 6 credits in our runs
+    (2026-08-16, two rounds), so 166 healthy new leads would use 996 of the month's 1,000
+    credits. Duplicates and handled failures change the total, which is what the calculator
+    above works out for your mix.</dd>
+    <dt>What consumes a credit?</dt>
+    <dd>Module operations. In our runs a simple operation consumed 1 credit (terminology checked
+    on 2026-08-18): a healthy new lead cost 6 credits, a duplicate that took the update path 3,
+    and a handled failure up to 7 including the alert email. The error-handler directives
+    themselves were not billed; the alert email cost 1 credit. Whether every module type bills
+    exactly one credit we did not test beyond the modules in this workflow.</dd>
+    <dt>What happens when the 1,000 credits run out?</dt>
+    <dd>We have not tested hitting the cap, so we will not describe the behaviour from guesswork.
+    The paid step up is Make Core at $9 a month on monthly billing for 10,000 credits a month
+    (make.com/en/pricing, checked on 2026-08-20).</dd>
+    <dt>Do failed or handled runs still consume credits?</dt>
+    <dd>In our tests, yes. Our unhandled forced failure consumed 5 credits before the run
+    stopped, and a handled failure consumed up to 7 including the alert. We did not test other
+    failure shapes, so treat this as what we saw rather than a billing rule. Budget for
+    failures, not only for successes.</dd>
+  </dl>
 
   <h2>What this calculator does not know</h2>
   <p>It assumes one acknowledgement email per new lead, one alert email per handled failure, and no other scenarios on the same Make account. The Brevo check is a 30-day average and cannot tell you about a busy day. It does not model Make credit add-ons, annual discounts, HubSpot paid tiers, or your time. Every v2 figure comes from a single observation per case. In v2, a handled association failure leaves the deal unlinked to the contact, and a handled duplicate drops the newer submission's data instead of merging it. Prices and limits change; the dates above say when we last looked.</p>
